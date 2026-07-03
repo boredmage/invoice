@@ -1,26 +1,197 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "@fontsource-variable/geist";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: #0167ff;
+  --color-ink: #000000;
+  --color-ink-soft: #494949;
+  --color-ink-muted: #999999;
+  --color-line: #ececec;
+  --color-canvas: #fafafa;
+  --font-sans: "Geist Variable", -apple-system, "Segoe UI", Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html,
+  body {
+    height: 100%;
+    font-family: var(--font-sans);
+    background: #ffffff;
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-ink-muted);
+  }
+
+  /* hide number-input spinners like the original */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* dot-grid canvas behind the invoice card */
+  .dot-canvas {
+    background-color: #fafafa;
+    background-image: radial-gradient(circle, #dcdcdc 1px, transparent 1.3px);
+    background-size: 22px 22px;
+    background-position: 0 0;
+  }
+
+  /* fine-dot "redacted" placeholder used in the live preview */
+  .redacted {
+    background-image: radial-gradient(
+      circle,
+      rgba(1, 103, 255, 0.28) 0.9px,
+      transparent 1px
+    );
+    background-size: 4px 4px;
+    border-radius: 1px;
+  }
+
+  .redacted-circle {
+    background-image: radial-gradient(
+      circle,
+      rgba(1, 103, 255, 0.28) 0.9px,
+      transparent 1px
+    );
+    background-size: 4px 4px;
+    border-radius: 9999px;
+  }
+
+  /* blue corner brackets marking the active preview section */
+  .brackets::before,
+  .brackets::after,
+  .brackets > .bracket-b::before,
+  .brackets > .bracket-b::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .brackets::before {
+    top: 4px;
+    left: 4px;
+    border-top: 2px solid var(--color-accent);
+    border-left: 2px solid var(--color-accent);
+  }
+  .brackets::after {
+    top: 4px;
+    right: 4px;
+    border-top: 2px solid var(--color-accent);
+    border-right: 2px solid var(--color-accent);
+  }
+  .brackets > .bracket-b::before {
+    bottom: 4px;
+    left: 4px;
+    border-bottom: 2px solid var(--color-accent);
+    border-left: 2px solid var(--color-accent);
+  }
+  .brackets > .bracket-b::after {
+    bottom: 4px;
+    right: 4px;
+    border-bottom: 2px solid var(--color-accent);
+    border-right: 2px solid var(--color-accent);
+  }
+
+  /* iOS-style toggle */
+  .toggle {
+    width: 28px;
+    height: 16px;
+    border-radius: 9999px;
+    background: #e5e5e5;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+    border: none;
+    padding: 0;
+  }
+  .toggle::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s ease;
+  }
+  .toggle.on {
+    background: var(--color-accent);
+  }
+  .toggle.on::after {
+    transform: translateX(12px);
+  }
+
+  .step-transition {
+    animation: fadeSlideIn 0.25s ease-out;
+  }
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Print: only the invoice card ─────────────────── */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #invoice-card,
+  #invoice-card * {
+    visibility: visible;
+  }
+  #invoice-card {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    min-height: 0 !important;
+    margin: 0;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+  .print-hidden {
+    display: none !important;
+  }
+  /* active-step corner brackets are an editing aid — never print them */
+  .brackets::before,
+  .brackets::after,
+  .brackets > .bracket-b::before,
+  .brackets > .bracket-b::after {
+    display: none !important;
+  }
 }

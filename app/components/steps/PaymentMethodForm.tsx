@@ -1,0 +1,283 @@
+"use client";
+
+import { useState } from "react";
+import type { PaymentMethod } from "../../lib/types";
+import { ASSETS, NETWORKS } from "../../lib/data";
+import { FormRow, RowInput, SearchDropdown, TokenDot } from "../ui";
+
+interface PaymentMethodFormProps {
+  data: PaymentMethod;
+  onChange: (data: PaymentMethod) => void;
+}
+
+function AddTrigger({
+  value,
+  open,
+  onClick,
+}: {
+  value: string | null;
+  open: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex cursor-pointer items-center gap-1.5"
+    >
+      {value ? (
+        <span className="text-sm font-medium text-ink">{value}</span>
+      ) : (
+        <span className="flex h-6 items-center gap-1 rounded-full bg-accent/5 pl-1.5 pr-2.5 text-sm font-medium text-accent">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+            <path
+              d="M6 2.5V9.5M2.5 6H9.5"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+          </svg>
+          Add
+        </span>
+      )}
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        className={`text-ink-muted transition-transform ${open ? "rotate-180" : ""}`}
+      >
+        <path
+          d="M3 4.5L6 7.5L9 4.5"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
+  );
+}
+
+export default function PaymentMethodForm({
+  data,
+  onChange,
+}: PaymentMethodFormProps) {
+  const [manual, setManual] = useState(
+    data.method === "manual" || !!data.walletAddress
+  );
+  const [showNetwork, setShowNetwork] = useState(false);
+  const [showAsset, setShowAsset] = useState(false);
+
+  const selectedNetwork = NETWORKS.find((n) => n.code === data.network);
+  const selectedAsset = ASSETS.find((a) => a.code === data.asset);
+
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold tracking-[-0.01em] text-ink">
+        Payment method
+      </h2>
+
+      <div className="mt-3 flex items-center justify-between">
+        <p className="text-[15px] text-ink-soft">
+          How would you like to get paid?
+        </p>
+        {!manual ? (
+          <button
+            onClick={() => {
+              setManual(true);
+              onChange({ ...data, method: "manual" });
+            }}
+            className="flex cursor-pointer items-center gap-1.5 text-sm text-ink transition-opacity hover:opacity-70"
+          >
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+              <rect
+                x="4.5"
+                y="1.5"
+                width="8"
+                height="8"
+                rx="1.5"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              />
+              <path
+                d="M9.5 12.5h-6a2 2 0 0 1-2-2v-6"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
+            </svg>
+            Add manually
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              setManual(false);
+              onChange({ ...data, method: "wallet" });
+            }}
+            className="flex cursor-pointer items-center gap-1.5 text-sm text-ink transition-opacity hover:opacity-70"
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <rect
+                x="1.5"
+                y="3.5"
+                width="13"
+                height="9.5"
+                rx="2"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              />
+              <path d="M1.5 6.5H15" stroke="currentColor" strokeWidth="1.2" />
+              <circle cx="12" cy="9.75" r="0.9" fill="currentColor" />
+            </svg>
+            Connect wallet
+          </button>
+        )}
+      </div>
+
+      {!manual && (
+        <button
+          onClick={() => {
+            setManual(true);
+            onChange({ ...data, method: "manual" });
+          }}
+          className="mt-4 flex cursor-pointer items-center gap-2 border-b border-line pb-4 text-sm font-medium text-accent transition-opacity hover:opacity-75"
+        >
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <rect
+              x="1.5"
+              y="3.5"
+              width="13"
+              height="9.5"
+              rx="2"
+              stroke="currentColor"
+              strokeWidth="1.3"
+            />
+            <path d="M1.5 6.5H15" stroke="currentColor" strokeWidth="1.3" />
+            <circle cx="12" cy="9.75" r="0.9" fill="currentColor" />
+          </svg>
+          Connect wallet
+        </button>
+      )}
+
+      {manual && (
+        <div className="step-transition">
+          <FormRow label="Wallet address">
+            <RowInput
+              type="text"
+              placeholder="0x0000000"
+              value={data.walletAddress}
+              onChange={(e) =>
+                onChange({ ...data, walletAddress: e.target.value })
+              }
+            />
+          </FormRow>
+
+          <div className="relative">
+            <FormRow label="Network">
+              <AddTrigger
+                value={selectedNetwork?.name ?? null}
+                open={showNetwork}
+                onClick={() => setShowNetwork((v) => !v)}
+              />
+            </FormRow>
+            <SearchDropdown
+              open={showNetwork}
+              onClose={() => setShowNetwork(false)}
+              searchPlaceholder="Search your network..."
+              checkStyle="checkbox"
+              items={NETWORKS.map((n) => ({
+                key: n.code,
+                name: n.name,
+                code: n.code,
+                icon: <TokenDot color={n.color} label={n.name} />,
+                badge: n.paymentLink ? "Payment link supported" : undefined,
+                selected: n.code === data.network,
+              }))}
+              onSelect={(code) => {
+                onChange({
+                  ...data,
+                  network: code === data.network ? "" : code,
+                });
+                setShowNetwork(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Asset */}
+      <div className="relative">
+        <FormRow label="Asset">
+          <AddTrigger
+            value={selectedAsset ? selectedAsset.name : null}
+            open={showAsset}
+            onClick={() => setShowAsset((v) => !v)}
+          />
+        </FormRow>
+        <SearchDropdown
+          open={showAsset}
+          onClose={() => setShowAsset(false)}
+          searchPlaceholder="Search your asset..."
+          checkStyle="checkbox"
+          items={ASSETS.map((a) => ({
+            key: a.code,
+            name: a.name,
+            code: a.code,
+            icon: <TokenDot color={a.color} label={a.name} />,
+            selected: a.code === data.asset,
+          }))}
+          onSelect={(code) => {
+            onChange({ ...data, asset: code === data.asset ? "" : code });
+            setShowAsset(false);
+          }}
+        />
+      </div>
+
+      {/* Fiat toggle — reveals simple bank details for the invoice footer */}
+      <div className="mt-10">
+        <FormRow label="Fiat" last={!data.fiat}>
+          <button
+            className={`toggle ${data.fiat ? "on" : ""}`}
+            onClick={() => onChange({ ...data, fiat: !data.fiat })}
+            aria-label="Toggle fiat payment details"
+          />
+        </FormRow>
+
+        {data.fiat && (
+          <div className="step-transition">
+            <FormRow label="Bank name">
+              <RowInput
+                type="text"
+                placeholder="e.g. Chase"
+                value={data.bankName}
+                onChange={(e) =>
+                  onChange({ ...data, bankName: e.target.value })
+                }
+              />
+            </FormRow>
+            <FormRow label="Account number">
+              <RowInput
+                type="text"
+                placeholder="000123456789"
+                value={data.accountNumber}
+                onChange={(e) =>
+                  onChange({ ...data, accountNumber: e.target.value })
+                }
+              />
+            </FormRow>
+            <FormRow label="Routing / IBAN" last>
+              <RowInput
+                type="text"
+                placeholder="021000021"
+                value={data.routingNumber}
+                onChange={(e) =>
+                  onChange({ ...data, routingNumber: e.target.value })
+                }
+              />
+            </FormRow>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
