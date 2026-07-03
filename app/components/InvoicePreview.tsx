@@ -113,7 +113,7 @@ function Dots({
     <canvas
       ref={ref}
       aria-hidden
-      className={`inline-block align-middle ${circle ? "rounded-full" : ""}`}
+      className={`block ${circle ? "rounded-full" : ""}`}
       style={{ width: w, height: h }}
     />
   );
@@ -191,27 +191,29 @@ function PartyBlock({
   taxId: string;
   logo: string | null;
 }) {
-  const empty = !name && !email && addressLines.length === 0 && !taxId;
+  // once any block in the section has data, all placeholder matrices vanish
+  const empty =
+    !name && !email && addressLines.length === 0 && !taxId && !logo;
   return (
     <div className="px-8 py-7">
       <p className={MICRO}>{label}</p>
 
-      {/* avatar */}
-      <div className="mt-4">
+      {/* avatar — fixed 44px box so swapping canvas/image never shifts layout */}
+      <div className="mt-4 h-11 w-11">
         {logo ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={logo}
             alt=""
-            className="h-11 w-11 rounded-full object-cover"
+            className="block h-11 w-11 rounded-full object-cover"
           />
         ) : name ? (
           <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F0F0] text-lg font-medium text-ink">
             {name.charAt(0).toUpperCase()}
           </span>
-        ) : (
+        ) : empty ? (
           <Dots w={44} h={44} circle />
-        )}
+        ) : null}
       </div>
 
       {/* name */}
@@ -220,9 +222,9 @@ function PartyBlock({
           <p className="text-xl font-semibold leading-tight tracking-[-0.01em] text-ink">
             {name}
           </p>
-        ) : (
+        ) : empty ? (
           <DotLine widths={[74, 60]} h={12} />
-        )}
+        ) : null}
       </div>
 
       {/* email + address */}
@@ -292,6 +294,16 @@ export default function InvoicePreview({
   };
 
   const hasItems = details.items.some((i) => i.name || i.price > 0);
+  // section-level empty flags — once any block in a section has data,
+  // every remaining placeholder matrix in that section is removed
+  const itemsEmpty = !hasItems && !details.note;
+  const paymentEmpty = !(
+    asset ||
+    network ||
+    payment.walletAddress ||
+    (payment.fiat &&
+      (payment.bankName || payment.accountNumber || payment.routingNumber))
+  );
 
   return (
     <div
@@ -395,7 +407,7 @@ export default function InvoicePreview({
                 <p className="text-right">{fmtNum(item.qty * item.price)}</p>
               </div>
             ))
-          ) : (
+          ) : itemsEmpty ? (
             <div className="grid grid-cols-[1fr_60px_90px_100px] gap-4 border-b border-line py-3.5">
               <DotLine widths={[64, 40, 52]} />
               <span className="flex justify-end">
@@ -408,6 +420,8 @@ export default function InvoicePreview({
                 <Dots w={56} />
               </span>
             </div>
+          ) : (
+            <div className="border-b border-line py-3.5" />
           )}
 
           {/* note + totals */}
@@ -482,7 +496,7 @@ export default function InvoicePreview({
                     </p>
                   </div>
                 </div>
-              ) : (
+              ) : paymentEmpty ? (
                 <div className="flex items-center gap-2.5">
                   <Dots w={28} h={28} circle />
                   <span className="space-y-1.5">
@@ -490,31 +504,35 @@ export default function InvoicePreview({
                     <DotLine widths={[34]} h={8} />
                   </span>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
 
           <div>
             <p className={MICRO}>Instructions</p>
             <div className="mt-3.5 space-y-2 text-[13px]">
-              <div className="flex items-start justify-between gap-4">
-                <span className="shrink-0 text-ink-muted">Network</span>
-                {network ? (
-                  <span className="text-right text-ink">{network.name}</span>
-                ) : (
-                  <Dots w={92} />
-                )}
-              </div>
-              <div className="flex items-start justify-between gap-4">
-                <span className="shrink-0 text-ink-muted">Wallet</span>
-                {payment.walletAddress ? (
-                  <span className="break-all text-right text-xs leading-snug text-ink">
-                    {payment.walletAddress}
-                  </span>
-                ) : (
-                  <Dots w={140} />
-                )}
-              </div>
+              {(network || paymentEmpty) && (
+                <div className="flex items-start justify-between gap-4">
+                  <span className="shrink-0 text-ink-muted">Network</span>
+                  {network ? (
+                    <span className="text-right text-ink">{network.name}</span>
+                  ) : (
+                    <Dots w={92} />
+                  )}
+                </div>
+              )}
+              {(payment.walletAddress || paymentEmpty) && (
+                <div className="flex items-start justify-between gap-4">
+                  <span className="shrink-0 text-ink-muted">Wallet</span>
+                  {payment.walletAddress ? (
+                    <span className="break-all text-right text-xs leading-snug text-ink">
+                      {payment.walletAddress}
+                    </span>
+                  ) : (
+                    <Dots w={140} />
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -542,38 +560,44 @@ export default function InvoicePreview({
             <div>
               <p className={MICRO}>Instructions</p>
               <div className="mt-3.5 space-y-2 text-[13px]">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="shrink-0 text-ink-muted">Bank</span>
-                  {payment.bankName ? (
-                    <span className="text-right text-ink">
-                      {payment.bankName}
+                {(payment.bankName || paymentEmpty) && (
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="shrink-0 text-ink-muted">Bank</span>
+                    {payment.bankName ? (
+                      <span className="text-right text-ink">
+                        {payment.bankName}
+                      </span>
+                    ) : (
+                      <Dots w={92} />
+                    )}
+                  </div>
+                )}
+                {(payment.accountNumber || paymentEmpty) && (
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="shrink-0 text-ink-muted">Account</span>
+                    {payment.accountNumber ? (
+                      <span className="break-all text-right text-xs leading-snug text-ink">
+                        {payment.accountNumber}
+                      </span>
+                    ) : (
+                      <Dots w={120} />
+                    )}
+                  </div>
+                )}
+                {(payment.routingNumber || paymentEmpty) && (
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="shrink-0 text-ink-muted">
+                      Routing / IBAN
                     </span>
-                  ) : (
-                    <Dots w={92} />
-                  )}
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <span className="shrink-0 text-ink-muted">Account</span>
-                  {payment.accountNumber ? (
-                    <span className="break-all text-right text-xs leading-snug text-ink">
-                      {payment.accountNumber}
-                    </span>
-                  ) : (
-                    <Dots w={120} />
-                  )}
-                </div>
-                <div className="flex items-start justify-between gap-4">
-                  <span className="shrink-0 text-ink-muted">
-                    Routing / IBAN
-                  </span>
-                  {payment.routingNumber ? (
-                    <span className="break-all text-right text-xs leading-snug text-ink">
-                      {payment.routingNumber}
-                    </span>
-                  ) : (
-                    <Dots w={100} />
-                  )}
-                </div>
+                    {payment.routingNumber ? (
+                      <span className="break-all text-right text-xs leading-snug text-ink">
+                        {payment.routingNumber}
+                      </span>
+                    ) : (
+                      <Dots w={100} />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
