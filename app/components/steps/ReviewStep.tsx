@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { InvoiceData } from "../../lib/types";
 
 interface ReviewStepProps {
@@ -8,6 +9,7 @@ interface ReviewStepProps {
 }
 
 export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
+  const [downloading, setDownloading] = useState(false);
   const clientName = invoiceData.client.companyName.trim();
   const clientEmail = invoiceData.client.email.trim();
 
@@ -23,8 +25,25 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
     window.location.href = `mailto:${clientEmail}?subject=${subject}&body=${body}`;
   };
 
-  const handleDownload = () => {
-    window.print();
+  const handleDownload = async () => {
+    if (downloading) return;
+    setDownloading(true);
+    try {
+      // both are client-only; load them on demand so the wizard stays light
+      const [{ pdf }, { default: InvoicePdf }] = await Promise.all([
+        import("@react-pdf/renderer"),
+        import("../InvoicePdf"),
+      ]);
+      const blob = await pdf(<InvoicePdf invoiceData={invoiceData} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `invoice-${invoiceData.terms.invoiceNumber || "000001"}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setDownloading(false);
+    }
   };
 
   return (
@@ -58,7 +77,8 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
 
         <button
           onClick={handleDownload}
-          className="flex cursor-pointer items-center gap-2 text-[15px] font-medium text-ink transition-opacity hover:opacity-70"
+          disabled={downloading}
+          className="flex cursor-pointer items-center gap-2 text-[15px] font-medium text-ink transition-opacity hover:opacity-70 disabled:cursor-wait disabled:opacity-50"
         >
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
             <path
@@ -75,7 +95,7 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
               strokeLinecap="round"
             />
           </svg>
-          Download
+          {downloading ? "Preparing PDF..." : "Download"}
         </button>
       </div>
 
