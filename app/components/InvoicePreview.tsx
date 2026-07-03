@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   type InvoiceData,
   type StepId,
@@ -17,10 +17,105 @@ interface InvoicePreviewProps {
   onSectionClick: (step: StepId) => void;
 }
 
-/* ── fine-dot placeholder line ── */
-function Dots({ w, h = 10 }: { w: number; h?: number }) {
+/* ── canvas dot-matrix placeholder ──
+   A grid of dots where a random subset re-seeds every tick, so the
+   pattern scrambles irregularly like a dot-matrix display. Drawing
+   happens only after mount, so SSR markup stays stable. */
+function Dots({
+  w,
+  h = 10,
+  circle = false,
+}: {
+  w: number;
+  h?: number;
+  circle?: boolean;
+}) {
+  const ref = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.scale(dpr, dpr);
+
+    const cell = 4;
+    const dot = 2.8; // rounded-square side, 1.5x the old circle diameter
+    const cols = Math.max(1, Math.floor(w / cell));
+    const rows = Math.max(1, Math.floor(h / cell));
+    const cx = w / 2;
+    const cy = h / 2;
+    const radius = Math.min(w, h) / 2;
+
+    // per-cell opacity; 0 = inactive (drawn grey so the grid stays regular)
+    const state = new Float32Array(cols * rows);
+    const reseed = (i: number) => {
+      state[i] = Math.random() < 0.52 ? 0.4 + Math.random() * 0.6 : 0;
+    };
+    for (let i = 0; i < state.length; i++) reseed(i);
+
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const a = state[r * cols + c];
+          const x = c * cell + cell / 2;
+          const y = r * cell + cell / 2;
+          if (circle) {
+            const dx = x - cx;
+            const dy = y - cy;
+            if (dx * dx + dy * dy > (radius - 1) * (radius - 1)) continue;
+          }
+          if (a) {
+            ctx.fillStyle = "#0167FF";
+            ctx.globalAlpha = a * 0.6;
+          } else {
+            ctx.fillStyle = "#8A8A8A";
+            ctx.globalAlpha = 0.28;
+          }
+          ctx.beginPath();
+          if (typeof ctx.roundRect === "function") {
+            ctx.roundRect(x - dot / 2, y - dot / 2, dot, dot, 0.8);
+          } else {
+            ctx.rect(x - dot / 2, y - dot / 2, dot, dot);
+          }
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    draw();
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    let last = 0;
+    const tick = (t: number) => {
+      raf = requestAnimationFrame(tick);
+      if (t - last < 140) return; // ~7 scrambles/sec
+      last = t;
+      const flips = Math.max(1, Math.floor(state.length * 0.2));
+      for (let i = 0; i < flips; i++) {
+        reseed(Math.floor(Math.random() * state.length));
+      }
+      draw();
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [w, h, circle]);
+
   return (
-    <span className="redacted inline-block" style={{ width: w, height: h }} />
+    <canvas
+      ref={ref}
+      aria-hidden
+      className={`inline-block align-middle ${circle ? "rounded-full" : ""}`}
+      style={{ width: w, height: h }}
+    />
   );
 }
 
@@ -64,12 +159,14 @@ function Section({
     >
       {active && <span className="bracket-b" />}
       {children}
-      {hover && !active && (
-        <span className="print-hidden absolute bottom-2 right-2 z-10 flex items-center gap-1.5 rounded-full bg-white py-1 pl-1 pr-2.5 shadow-[0_2px_10px_rgba(0,0,0,0.14)]">
+      {hover && (
+        <span className="step-chip print-hidden absolute left-1/2 top-2 z-10 flex items-center gap-1.5 rounded-full bg-white py-1 pl-1 pr-2.5 shadow-[0_2px_10px_rgba(0,0,0,0.14)]">
           <span className="flex h-4 w-4 items-center justify-center rounded-full bg-ink-soft text-[10px] font-semibold text-white">
             {step + 1}
           </span>
-          <span className="text-xs font-medium text-ink">{label}</span>
+          <span className="whitespace-nowrap text-xs font-medium text-ink">
+            {label}
+          </span>
         </span>
       )}
     </div>
@@ -113,7 +210,7 @@ function PartyBlock({
             {name.charAt(0).toUpperCase()}
           </span>
         ) : (
-          <span className="redacted-circle block h-11 w-11" />
+          <Dots w={44} h={44} circle />
         )}
       </div>
 
@@ -387,7 +484,7 @@ export default function InvoicePreview({
                 </div>
               ) : (
                 <div className="flex items-center gap-2.5">
-                  <span className="redacted-circle block h-7 w-7" />
+                  <Dots w={28} h={28} circle />
                   <span className="space-y-1.5">
                     <DotLine widths={[64]} />
                     <DotLine widths={[34]} h={8} />
@@ -418,23 +515,70 @@ export default function InvoicePreview({
                   <Dots w={140} />
                 )}
               </div>
-              {payment.fiat && payment.bankName && (
-                <div className="flex items-start justify-between gap-4">
-                  <span className="shrink-0 text-ink-muted">Bank</span>
-                  <span className="text-right text-xs leading-snug text-ink">
-                    {[
-                      payment.bankName,
-                      payment.accountNumber,
-                      payment.routingNumber,
-                    ]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </div>
+
+        {/* fiat gets its own block under the crypto part */}
+        {payment.fiat && (
+          <div className="grid grid-cols-2 border-t border-line px-8 py-7">
+            <div>
+              <p className={MICRO}>Payable in</p>
+              <div className="mt-3.5 flex items-center gap-2.5">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F0F0F0] text-sm leading-none">
+                  {currency.flag}
+                </span>
+                <div>
+                  <p className="text-sm font-medium leading-tight text-ink">
+                    {currency.name}
+                  </p>
+                  <p className="text-xs leading-tight text-ink-muted">
+                    {currency.code}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p className={MICRO}>Instructions</p>
+              <div className="mt-3.5 space-y-2 text-[13px]">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="shrink-0 text-ink-muted">Bank</span>
+                  {payment.bankName ? (
+                    <span className="text-right text-ink">
+                      {payment.bankName}
+                    </span>
+                  ) : (
+                    <Dots w={92} />
+                  )}
+                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <span className="shrink-0 text-ink-muted">Account</span>
+                  {payment.accountNumber ? (
+                    <span className="break-all text-right text-xs leading-snug text-ink">
+                      {payment.accountNumber}
+                    </span>
+                  ) : (
+                    <Dots w={120} />
+                  )}
+                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <span className="shrink-0 text-ink-muted">
+                    Routing / IBAN
+                  </span>
+                  {payment.routingNumber ? (
+                    <span className="break-all text-right text-xs leading-snug text-ink">
+                      {payment.routingNumber}
+                    </span>
+                  ) : (
+                    <Dots w={100} />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <p className="px-8 pb-5 text-[11px] text-ink-muted">
           Prepared with the internal invoice tool
         </p>

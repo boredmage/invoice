@@ -370,24 +370,85 @@ export default function InvoicePdf({
                   </Text>
                 </View>
               ) : null}
-              {payment.fiat && payment.bankName ? (
-                <View style={styles.instRow}>
-                  <Text style={{ fontSize: 11, color: MUTED }}>Bank</Text>
-                  <Text
-                    style={{ fontSize: 9.5, maxWidth: 170, textAlign: "right" }}
-                  >
-                    {[
-                      payment.bankName,
-                      payment.accountNumber,
-                      payment.routingNumber,
-                    ]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </Text>
-                </View>
-              ) : null}
             </View>
           </View>
+
+          {/* fiat: its own block under the crypto part */}
+          {payment.fiat &&
+          (payment.bankName ||
+            payment.accountNumber ||
+            payment.routingNumber) ? (
+            <View
+              style={{
+                ...styles.footerCols,
+                borderTopWidth: 1,
+                borderTopColor: LINE,
+                marginTop: 18,
+                paddingTop: 18,
+              }}
+            >
+              <View style={styles.footerCol}>
+                <Text style={styles.micro}>Payable in</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 14,
+                  }}
+                >
+                  <View
+                    style={{ ...styles.tokenDot, backgroundColor: "#F0F0F0" }}
+                  >
+                    <Text style={{ fontSize: 12, fontWeight: 600 }}>
+                      {currency.symbol.trim().charAt(0)}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={{ fontSize: 11, fontWeight: 500 }}>
+                      {currency.name}
+                    </Text>
+                    <Text style={{ fontSize: 9.5, color: MUTED, marginTop: 2 }}>
+                      {currency.code}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.footerCol}>
+                <Text style={{ ...styles.micro, marginBottom: 14 }}>
+                  Instructions
+                </Text>
+                {payment.bankName ? (
+                  <View style={styles.instRow}>
+                    <Text style={{ fontSize: 11, color: MUTED }}>Bank</Text>
+                    <Text style={{ fontSize: 11 }}>{payment.bankName}</Text>
+                  </View>
+                ) : null}
+                {payment.accountNumber ? (
+                  <View style={styles.instRow}>
+                    <Text style={{ fontSize: 11, color: MUTED }}>Account</Text>
+                    <Text
+                      style={{ fontSize: 9.5, maxWidth: 170, textAlign: "right" }}
+                    >
+                      {chunk(payment.accountNumber)}
+                    </Text>
+                  </View>
+                ) : null}
+                {payment.routingNumber ? (
+                  <View style={styles.instRow}>
+                    <Text style={{ fontSize: 11, color: MUTED }}>
+                      Routing / IBAN
+                    </Text>
+                    <Text
+                      style={{ fontSize: 9.5, maxWidth: 170, textAlign: "right" }}
+                    >
+                      {chunk(payment.routingNumber)}
+                    </Text>
+                  </View>
+                ) : null}
+              </View>
+            </View>
+          ) : null}
 
           <Text style={{ fontSize: 9, color: MUTED, marginTop: "auto" }}>
             Prepared with the internal invoice tool
