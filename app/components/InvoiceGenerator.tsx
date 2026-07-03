@@ -1,25 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  type InvoiceData,
-  type StepId,
-  STEPS,
-  getDefaultInvoiceData,
-} from "../lib/types";
+import { type StepId, STEPS } from "../lib/types";
+import { useInvoiceDraft } from "../lib/useInvoiceDraft";
 import Header from "./Header";
+import Banner from "./Banner";
 import FormPanel from "./FormPanel";
 import InvoicePreview from "./InvoicePreview";
 
-const STORAGE_KEY = "crypto-invoice-draft";
-
 export default function InvoiceGenerator() {
+  const { invoiceData, updateInvoiceData, resetDraft } = useInvoiceDraft();
   const [currentStep, setCurrentStep] = useState<StepId>(0);
-  const [invoiceData, setInvoiceData] = useState<InvoiceData>(
-    getDefaultInvoiceData
-  );
   const [showBanner, setShowBanner] = useState(true);
-  const hydrated = useRef(false);
   const asideRef = useRef<HTMLElement>(null);
 
   // Mobile: the sheet rests low enough that scrolling up reveals the whole
@@ -29,31 +21,6 @@ export default function InvoiceGenerator() {
       window.scrollTo(0, Math.max(0, asideRef.current.offsetTop - 416));
     }
   }, []);
-
-  // restore a saved draft (internal tool — everything stays in the browser)
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed?.data) {
-          setInvoiceData({ ...getDefaultInvoiceData(), ...parsed.data });
-        }
-      }
-    } catch {
-      /* corrupt draft — start fresh */
-    }
-    hydrated.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated.current) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ data: invoiceData }));
-    } catch {
-      /* storage full/unavailable — drafts just won't persist */
-    }
-  }, [invoiceData]);
 
   const handleNext = useCallback(() => {
     setCurrentStep((prev) =>
@@ -66,21 +33,9 @@ export default function InvoiceGenerator() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setInvoiceData(getDefaultInvoiceData());
+    resetDraft();
     setCurrentStep(0);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* noop */
-    }
-  }, []);
-
-  const updateInvoiceData = useCallback(
-    (updater: (prev: InvoiceData) => InvoiceData) => {
-      setInvoiceData(updater);
-    },
-    []
-  );
+  }, [resetDraft]);
 
   return (
     <div className="flex min-h-screen w-full flex-col lg:h-screen lg:flex-row lg:overflow-hidden">
@@ -96,27 +51,7 @@ export default function InvoiceGenerator() {
           </div>
 
           {showBanner && currentStep < 5 && (
-            <div className="flex items-center gap-2 rounded-lg bg-[#FAFAFA] py-2.5 pl-4 pr-3 text-[13px] lg:mt-5">
-              <span className="font-semibold text-accent">NEW</span>
-              <span className="text-[#DDDDDD]">|</span>
-              <span className="text-ink-soft">
-                Invoice tracking, automated emails and more
-              </span>
-              <button
-                onClick={() => setShowBanner(false)}
-                className="ml-auto shrink-0 cursor-pointer text-ink-muted transition-colors hover:text-ink"
-                aria-label="Dismiss banner"
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M3.5 3.5L10.5 10.5M10.5 3.5L3.5 10.5"
-                    stroke="currentColor"
-                    strokeWidth="1.3"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
+            <Banner onDismiss={() => setShowBanner(false)} />
           )}
 
           <FormPanel
