@@ -17,10 +17,10 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
     const subject = encodeURIComponent(
       `Invoice ${invoiceData.terms.invoiceNumber} from ${
         invoiceData.sender.companyName || "us"
-      }`
+      }`,
     );
     const body = encodeURIComponent(
-      `Hi,\n\nPlease find invoice ${invoiceData.terms.invoiceNumber} attached.\n\nIssue date: ${invoiceData.terms.issueDate}\nDue date: ${invoiceData.terms.dueDate}\n\nThank you!`
+      `Hi,\n\nPlease find invoice ${invoiceData.terms.invoiceNumber} attached.\n\nIssue date: ${invoiceData.terms.issueDate}\nDue date: ${invoiceData.terms.dueDate}\n\nThank you!`,
     );
     window.location.href = `mailto:${clientEmail}?subject=${subject}&body=${body}`;
   };
@@ -48,11 +48,11 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
 
   return (
     <div className="flex h-full min-h-[560px] flex-col pt-6 lg:min-h-0 lg:pt-16">
-      <h2 className="text-center text-[32px] font-semibold leading-[1.1] tracking-[-0.02em] text-ink lg:text-left lg:text-[44px]">
+      <h2 className="text-ink text-center text-[32px] leading-[1.1] font-semibold tracking-[-0.02em] lg:text-left lg:text-[44px]">
         Your invoice
         <br className="hidden lg:block" /> is ready
       </h2>
-      <p className="mt-4 text-center text-lg text-ink-soft lg:mt-5 lg:text-left">
+      <p className="text-ink-soft mt-4 text-center text-lg lg:mt-5 lg:text-left">
         Take a final look before downloading it.
       </p>
 
@@ -77,7 +77,7 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="flex cursor-pointer items-center gap-2 text-[15px] font-medium text-ink transition-opacity hover:opacity-70 disabled:cursor-wait disabled:opacity-50"
+          className="text-ink flex cursor-pointer items-center gap-2 text-[15px] font-medium transition-opacity hover:opacity-70 disabled:cursor-wait disabled:opacity-50"
         >
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
             <path
@@ -100,7 +100,7 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
 
       <button
         onClick={onReset}
-        className="mx-auto mt-auto flex cursor-pointer items-center gap-2 pb-2 pt-16 text-[15px] font-medium text-ink transition-opacity hover:opacity-70"
+        className="text-ink mx-auto mt-auto flex cursor-pointer items-center gap-2 pt-16 pb-2 text-[15px] font-medium transition-opacity hover:opacity-70"
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
           <path

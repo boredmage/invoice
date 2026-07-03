@@ -87,7 +87,7 @@ export default function FormPanel({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div key={currentStep} className="step-transition flex-1 pb-6 pt-10">
+      <div key={currentStep} className="step-transition flex-1 pt-10 pb-6">
         {renderStep()}
       </div>
 

@@ -16,8 +16,7 @@ export function PartyBlock({
 }) {
   const { companyName: name, email, taxId, logo } = party;
   const addressLines = partyAddressLines(party);
-  const empty =
-    !name && !email && addressLines.length === 0 && !taxId && !logo;
+  const empty = !name && !email && addressLines.length === 0 && !taxId && !logo;
 
   return (
     <div className="px-8 py-7">
@@ -33,7 +32,7 @@ export function PartyBlock({
             className="block h-11 w-11 rounded-full object-cover"
           />
         ) : name ? (
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F0F0] text-lg font-medium text-ink">
+          <span className="text-ink flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F0F0] text-lg font-medium">
             {name.charAt(0).toUpperCase()}
           </span>
         ) : empty ? (
@@ -44,7 +43,7 @@ export function PartyBlock({
       {/* name */}
       <div className="mt-4 min-h-[28px]">
         {name ? (
-          <p className="text-xl font-semibold leading-tight tracking-[-0.01em] text-ink">
+          <p className="text-ink text-xl leading-tight font-semibold tracking-[-0.01em]">
             {name}
           </p>
         ) : empty ? (
@@ -53,7 +52,7 @@ export function PartyBlock({
       </div>
 
       {/* email + address */}
-      <div className="mt-2 space-y-[5px] text-[13px] leading-snug text-ink-soft">
+      <div className="text-ink-soft mt-2 space-y-[5px] text-[13px] leading-snug">
         {empty ? (
           <>
             <span className="mt-1 block">

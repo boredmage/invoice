@@ -16,9 +16,9 @@ export function AddTrigger({
       className="flex cursor-pointer items-center gap-1.5"
     >
       {value ? (
-        <span className="text-sm font-medium text-ink">{value}</span>
+        <span className="text-ink text-sm font-medium">{value}</span>
       ) : (
-        <span className="flex h-6 items-center gap-1 rounded-full bg-accent/5 pl-1.5 pr-2.5 text-sm font-medium text-accent">
+        <span className="bg-accent/5 text-accent flex h-6 items-center gap-1 rounded-full pr-2.5 pl-1.5 text-sm font-medium">
           <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
             <path
               d="M6 2.5V9.5M2.5 6H9.5"

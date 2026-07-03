@@ -24,7 +24,7 @@ export default function InvoiceGenerator() {
 
   const handleNext = useCallback(() => {
     setCurrentStep((prev) =>
-      prev < STEPS.length - 1 ? ((prev + 1) as StepId) : prev
+      prev < STEPS.length - 1 ? ((prev + 1) as StepId) : prev,
     );
   }, []);
 
@@ -43,7 +43,7 @@ export default function InvoiceGenerator() {
              sized by its content), left pane on desktop ── */}
       <aside
         ref={asideRef}
-        className="print-hidden relative z-10 order-2 mt-[532px] flex min-h-[calc(100dvh-416px)] w-full flex-col rounded-t-2xl bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.08)] lg:order-1 lg:mt-0 lg:min-h-0 lg:h-full lg:w-[500px] lg:shrink-0 lg:overflow-hidden lg:rounded-none lg:border-r lg:border-line lg:shadow-none"
+        className="print-hidden lg:border-line relative z-10 order-2 mt-[532px] flex min-h-[calc(100dvh-416px)] w-full flex-col rounded-t-2xl bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.08)] lg:order-1 lg:mt-0 lg:h-full lg:min-h-0 lg:w-[500px] lg:shrink-0 lg:overflow-hidden lg:rounded-none lg:border-r lg:shadow-none"
       >
         <div className="flex min-h-0 flex-1 flex-col px-6 pt-8 lg:overflow-y-auto lg:px-12 lg:pt-12">
           <div className="hidden lg:block">

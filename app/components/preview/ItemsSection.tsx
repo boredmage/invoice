@@ -38,7 +38,7 @@ export function ItemsSection({
         details.items.map((item) => (
           <div
             key={item.id}
-            className={`${GRID} border-b border-line py-3.5 text-[13px] text-ink`}
+            className={`${GRID} border-line text-ink border-b py-3.5 text-[13px]`}
           >
             <p>{item.name || "—"}</p>
             <p className="text-right">{item.qty}</p>
@@ -47,7 +47,7 @@ export function ItemsSection({
           </div>
         ))
       ) : itemsEmpty ? (
-        <div className={`${GRID} border-b border-line py-3.5`}>
+        <div className={`${GRID} border-line border-b py-3.5`}>
           <DotLine widths={[64, 40, 52]} />
           <span className="flex justify-end">
             <Dots w={28} />
@@ -60,7 +60,7 @@ export function ItemsSection({
           </span>
         </div>
       ) : (
-        <div className="border-b border-line py-3.5" />
+        <div className="border-line border-b py-3.5" />
       )}
 
       {/* note + totals */}
@@ -68,38 +68,38 @@ export function ItemsSection({
         <div>
           {details.note && (
             <>
-              <p className="text-[13px] text-ink-muted">Note</p>
-              <p className="mt-1.5 whitespace-pre-wrap text-[13px] leading-snug text-ink-soft">
+              <p className="text-ink-muted text-[13px]">Note</p>
+              <p className="text-ink-soft mt-1.5 text-[13px] leading-snug whitespace-pre-wrap">
                 {details.note}
               </p>
             </>
           )}
         </div>
         <div className="text-[13px]">
-          <div className="flex items-center justify-between border-b border-line py-2.5">
+          <div className="border-line flex items-center justify-between border-b py-2.5">
             <span className="text-ink-muted">Subtotal</span>
             <span className="text-ink">{fmtMoney(subtotal)}</span>
           </div>
           {details.discount > 0 && (
-            <div className="flex items-center justify-between border-b border-line py-2.5">
+            <div className="border-line flex items-center justify-between border-b py-2.5">
               <span className="text-ink-muted">Discount</span>
               <span className="text-ink">-{fmtMoney(details.discount)}</span>
             </div>
           )}
           {details.tax > 0 && (
-            <div className="flex items-center justify-between border-b border-line py-2.5">
+            <div className="border-line flex items-center justify-between border-b py-2.5">
               <span className="text-ink-muted">Tax ({details.tax}%)</span>
               <span className="text-ink">
                 {fmtMoney(
                   (Math.max(0, subtotal - details.discount) * details.tax) /
-                    100
+                    100,
                 )}
               </span>
             </div>
           )}
           <div className="flex items-center justify-between py-3">
             <span className="text-ink-muted">Total</span>
-            <span className="text-lg font-semibold text-ink">
+            <span className="text-ink text-lg font-semibold">
               {fmtMoney(total)}
             </span>
           </div>

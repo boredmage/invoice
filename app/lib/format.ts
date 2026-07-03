@@ -18,7 +18,8 @@ export function partyAddressLines(p: CompanyInfo): string[] {
   const lines: string[] = [];
   if (p.address) lines.push(p.address);
   const cityLine = [p.city, p.state].filter(Boolean).join(", ");
-  if (cityLine || p.zip) lines.push([cityLine, p.zip].filter(Boolean).join(" "));
+  if (cityLine || p.zip)
+    lines.push([cityLine, p.zip].filter(Boolean).join(" "));
   if (p.country) lines.push(p.country);
   return lines;
 }

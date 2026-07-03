@@ -1,10 +1,6 @@
 import { Text, View } from "@react-pdf/renderer";
 import type { PaymentMethod } from "../../lib/types";
-import {
-  type Currency,
-  assetByCode,
-  networkByCode,
-} from "../../lib/data";
+import { type Currency, assetByCode, networkByCode } from "../../lib/data";
 import { chunkString } from "../../lib/format";
 import { MUTED, styles } from "./theme";
 

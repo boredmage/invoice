@@ -33,7 +33,7 @@ export default function CompanyForm({
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold tracking-[-0.01em] text-ink">
+      <h2 className="text-ink text-2xl font-semibold tracking-[-0.01em]">
         {title}
       </h2>
 
@@ -46,13 +46,13 @@ export default function CompanyForm({
             onChange={(e) => update("email", e.target.value)}
           />
         </FormRow>
-        <p className="pb-4 pt-2 text-[13px] text-ink-muted">
+        <p className="text-ink-muted pt-2 pb-4 text-[13px]">
           We&apos;ll fill the billing details automatically if we find the
           company.
         </p>
       </div>
 
-      <p className="pb-1 pt-4 text-[15px] text-ink-soft">Billing details</p>
+      <p className="text-ink-soft pt-4 pb-1 text-[15px]">Billing details</p>
 
       <FormRow label="Company name">
         <RowInput
@@ -87,7 +87,7 @@ export default function CompanyForm({
         ) : (
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-line text-ink-muted transition-colors hover:border-ink-muted hover:text-ink"
+            className="border-line text-ink-muted hover:border-ink-muted hover:text-ink flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border transition-colors"
             aria-label="Upload logo"
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none">

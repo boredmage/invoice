@@ -13,7 +13,7 @@ export function useInvoiceDraft() {
   // makes it differ from the server-rendered HTML and React throws a
   // hydration failure whenever a draft exists.
   const [invoiceData, setInvoiceData] = useState<InvoiceData>(
-    getDefaultInvoiceData
+    getDefaultInvoiceData,
   );
   const hydrated = useRef(false);
 
@@ -23,6 +23,7 @@ export function useInvoiceDraft() {
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed?.data) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time draft hydration; reading localStorage during render breaks SSR hydration
           setInvoiceData({ ...getDefaultInvoiceData(), ...parsed.data });
         }
       }
@@ -45,7 +46,7 @@ export function useInvoiceDraft() {
     (updater: (prev: InvoiceData) => InvoiceData) => {
       setInvoiceData(updater);
     },
-    []
+    [],
   );
 
   const resetDraft = useCallback(() => {

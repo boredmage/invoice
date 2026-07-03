@@ -27,7 +27,7 @@ function DateField({
     <div className="relative flex items-center gap-1.5">
       <button
         onClick={openPicker}
-        className="flex cursor-pointer items-center gap-1.5 text-sm text-ink"
+        className="text-ink flex cursor-pointer items-center gap-1.5 text-sm"
       >
         {value}
         <svg
@@ -49,7 +49,7 @@ function DateField({
       <input
         ref={inputRef}
         type="date"
-        className="pointer-events-none absolute right-0 top-full h-0 w-0 opacity-0"
+        className="pointer-events-none absolute top-full right-0 h-0 w-0 opacity-0"
         onChange={(e) => {
           if (!e.target.value) return;
           const [y, m, d] = e.target.value.split("-").map(Number);
@@ -59,7 +59,7 @@ function DateField({
               month: "long",
               day: "2-digit",
               year: "numeric",
-            })
+            }),
           );
         }}
       />
@@ -73,7 +73,7 @@ export default function InvoiceTermsForm({
 }: InvoiceTermsFormProps) {
   return (
     <div>
-      <h2 className="text-2xl font-semibold tracking-[-0.01em] text-ink">
+      <h2 className="text-ink text-2xl font-semibold tracking-[-0.01em]">
         Invoice terms
       </h2>
 

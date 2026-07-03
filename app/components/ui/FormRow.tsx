@@ -15,10 +15,10 @@ export function FormRow({
   return (
     <div
       className={`flex min-h-[54px] items-center justify-between gap-4 py-[17px] ${
-        last ? "" : "border-b border-line"
+        last ? "" : "border-line border-b"
       }`}
     >
-      <label className="shrink-0 text-[15px] text-ink">{label}</label>
+      <label className="text-ink shrink-0 text-[15px]">{label}</label>
       <div className="flex min-w-0 flex-1 items-center justify-end">
         {children}
       </div>
@@ -30,7 +30,7 @@ export function RowInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`w-full border-none bg-transparent text-right text-sm text-ink outline-none ${props.className ?? ""}`}
+      className={`text-ink w-full border-none bg-transparent text-right text-sm outline-none ${props.className ?? ""}`}
     />
   );
 }

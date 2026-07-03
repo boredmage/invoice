@@ -36,18 +36,18 @@ export default function InvoicePreview({
         label="Invoice terms"
         active={currentStep === 4}
         onClick={() => onSectionClick(4)}
-        className="flex h-14 shrink-0 items-center justify-between border-b border-line px-8"
+        className="border-line flex h-14 shrink-0 items-center justify-between border-b px-8"
       >
         <TermsStrip terms={terms} />
       </Section>
 
-      <div className="grid shrink-0 grid-cols-2 border-b border-line">
+      <div className="border-line grid shrink-0 grid-cols-2 border-b">
         <Section
           step={0}
           label="Your company"
           active={currentStep === 0}
           onClick={() => onSectionClick(0)}
-          className="min-h-[254px] border-r border-line"
+          className="border-line min-h-[254px] border-r"
         >
           <PartyBlock label="From" party={sender} />
         </Section>
@@ -77,10 +77,10 @@ export default function InvoicePreview({
         label="Payment method"
         active={currentStep === 3}
         onClick={() => onSectionClick(3)}
-        className="min-h-[156px] shrink-0 border-t border-line"
+        className="border-line min-h-[156px] shrink-0 border-t"
       >
         <PaymentSection payment={payment} currency={currency} />
-        <p className="px-8 pb-5 text-[11px] text-ink-muted">
+        <p className="text-ink-muted px-8 pb-5 text-[11px]">
           Prepared with the internal invoice tool
         </p>
       </Section>

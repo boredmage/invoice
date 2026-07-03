@@ -65,7 +65,7 @@ export function PdfItems({
               <Text>
                 {fmtMoney(
                   (Math.max(0, subtotal - details.discount) * details.tax) /
-                    100
+                    100,
                 )}
               </Text>
             </View>

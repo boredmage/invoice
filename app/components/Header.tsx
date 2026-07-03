@@ -28,10 +28,10 @@ export default function Header() {
       </div>
 
       <div className="leading-tight">
-        <h1 className="text-[15px] font-semibold text-ink">
+        <h1 className="text-ink text-[15px] font-semibold">
           Crypto Invoice Generator
         </h1>
-        <p className="text-xs text-ink-muted">
+        <p className="text-ink-muted text-xs">
           Internal edition — data stays in your browser
         </p>
       </div>

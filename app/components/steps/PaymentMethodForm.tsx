@@ -15,7 +15,7 @@ export default function PaymentMethodForm({
   onChange,
 }: PaymentMethodFormProps) {
   const [manual, setManual] = useState(
-    data.method === "manual" || !!data.walletAddress
+    data.method === "manual" || !!data.walletAddress,
   );
   const [showNetwork, setShowNetwork] = useState(false);
   const [showAsset, setShowAsset] = useState(false);
@@ -25,12 +25,12 @@ export default function PaymentMethodForm({
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold tracking-[-0.01em] text-ink">
+      <h2 className="text-ink text-2xl font-semibold tracking-[-0.01em]">
         Payment method
       </h2>
 
       <div className="mt-3 flex items-center justify-between">
-        <p className="text-[15px] text-ink-soft">
+        <p className="text-ink-soft text-[15px]">
           How would you like to get paid?
         </p>
         {!manual ? (
@@ -39,7 +39,7 @@ export default function PaymentMethodForm({
               setManual(true);
               onChange({ ...data, method: "manual" });
             }}
-            className="flex cursor-pointer items-center gap-1.5 text-sm text-ink transition-opacity hover:opacity-70"
+            className="text-ink flex cursor-pointer items-center gap-1.5 text-sm transition-opacity hover:opacity-70"
           >
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
               <rect
@@ -66,7 +66,7 @@ export default function PaymentMethodForm({
               setManual(false);
               onChange({ ...data, method: "wallet" });
             }}
-            className="flex cursor-pointer items-center gap-1.5 text-sm text-ink transition-opacity hover:opacity-70"
+            className="text-ink flex cursor-pointer items-center gap-1.5 text-sm transition-opacity hover:opacity-70"
           >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
               <rect
@@ -92,7 +92,7 @@ export default function PaymentMethodForm({
             setManual(true);
             onChange({ ...data, method: "manual" });
           }}
-          className="mt-4 flex cursor-pointer items-center gap-2 border-b border-line pb-4 text-sm font-medium text-accent transition-opacity hover:opacity-75"
+          className="border-line text-accent mt-4 flex cursor-pointer items-center gap-2 border-b pb-4 text-sm font-medium transition-opacity hover:opacity-75"
         >
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
             <rect

@@ -38,11 +38,11 @@ export function Section({
       {active && <span className="bracket-b" />}
       {children}
       {hover && (
-        <span className="step-chip print-hidden absolute left-1/2 top-2 z-10 flex items-center gap-1.5 rounded-full bg-white py-1 pl-1 pr-2.5 shadow-[0_2px_10px_rgba(0,0,0,0.14)]">
-          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-ink-soft text-[10px] font-semibold text-white">
+        <span className="step-chip print-hidden absolute top-2 left-1/2 z-10 flex items-center gap-1.5 rounded-full bg-white py-1 pr-2.5 pl-1 shadow-[0_2px_10px_rgba(0,0,0,0.14)]">
+          <span className="bg-ink-soft flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-semibold text-white">
             {step + 1}
           </span>
-          <span className="whitespace-nowrap text-xs font-medium text-ink">
+          <span className="text-ink text-xs font-medium whitespace-nowrap">
             {label}
           </span>
         </span>

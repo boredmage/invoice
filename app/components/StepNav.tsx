@@ -14,7 +14,7 @@ export default function StepNav({
   onNext: () => void;
 }) {
   return (
-    <div className="-mx-6 mt-auto flex items-stretch justify-between bg-white px-3 pb-5 pt-1 lg:sticky lg:bottom-0 lg:-mx-12 lg:pb-3">
+    <div className="-mx-6 mt-auto flex items-stretch justify-between bg-white px-3 pt-1 pb-5 lg:sticky lg:bottom-0 lg:-mx-12 lg:pb-3">
       {prevLabel ? (
         <button
           onClick={onBack}
@@ -25,7 +25,7 @@ export default function StepNav({
             height="16"
             viewBox="0 0 16 16"
             fill="none"
-            className="mt-0.5 shrink-0 text-ink-muted transition-transform group-hover:-translate-x-0.5"
+            className="text-ink-muted mt-0.5 shrink-0 transition-transform group-hover:-translate-x-0.5"
           >
             <path
               d="M10 12L6 8L10 4"
@@ -36,8 +36,8 @@ export default function StepNav({
             />
           </svg>
           <span>
-            <span className="block text-sm font-medium text-ink">Back</span>
-            <span className="mt-0.5 block text-xs font-semibold text-ink">
+            <span className="text-ink block text-sm font-medium">Back</span>
+            <span className="text-ink mt-0.5 block text-xs font-semibold">
               {prevLabel}
             </span>
           </span>
@@ -52,7 +52,7 @@ export default function StepNav({
           className="group flex cursor-pointer items-start justify-end gap-1 rounded-lg bg-[#FAFAFA] px-4 py-2.5 text-right transition-colors hover:bg-[#F0F0F0]"
         >
           <span>
-            <span className="flex items-center justify-end gap-1 text-sm font-medium text-ink">
+            <span className="text-ink flex items-center justify-end gap-1 text-sm font-medium">
               Next
               <svg
                 width="14"
@@ -70,7 +70,7 @@ export default function StepNav({
                 />
               </svg>
             </span>
-            <span className="mt-0.5 block text-xs font-semibold text-ink">
+            <span className="text-ink mt-0.5 block text-xs font-semibold">
               {nextLabel}
             </span>
           </span>

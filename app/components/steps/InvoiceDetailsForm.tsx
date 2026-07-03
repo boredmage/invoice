@@ -23,12 +23,12 @@ export default function InvoiceDetailsForm({
   const updateItem = (
     id: string,
     field: keyof LineItem,
-    value: string | number
+    value: string | number,
   ) => {
     onChange({
       ...data,
       items: data.items.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
+        item.id === id ? { ...item, [field]: value } : item,
       ),
     });
   };
@@ -56,10 +56,10 @@ export default function InvoiceDetailsForm({
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold tracking-[-0.01em] text-ink">
+      <h2 className="text-ink text-2xl font-semibold tracking-[-0.01em]">
         Invoice details
       </h2>
-      <p className="mt-3 text-[15px] text-ink-soft">
+      <p className="text-ink-soft mt-3 text-[15px]">
         Select an invoice currency
       </p>
 
@@ -71,7 +71,7 @@ export default function InvoiceDetailsForm({
             className="flex cursor-pointer items-center gap-1.5 rounded-md px-1 py-0.5 transition-colors hover:bg-[#FAFAFA]"
           >
             <span className="text-base leading-none">{currency.flag}</span>
-            <span className="text-sm font-medium text-ink">
+            <span className="text-ink text-sm font-medium">
               {currency.code}
             </span>
             <svg
@@ -115,22 +115,22 @@ export default function InvoiceDetailsForm({
 
       {/* Items */}
       <div className="mt-8">
-        <div className="flex items-center border-b border-line pb-2">
-          <span className="text-[15px] text-ink-soft">Items</span>
-          <span className="ml-auto w-12 text-right text-sm text-ink-muted">
+        <div className="border-line flex items-center border-b pb-2">
+          <span className="text-ink-soft text-[15px]">Items</span>
+          <span className="text-ink-muted ml-auto w-12 text-right text-sm">
             Qty
           </span>
-          <span className="w-20 text-right text-sm text-ink-muted">Price</span>
+          <span className="text-ink-muted w-20 text-right text-sm">Price</span>
         </div>
 
         {data.items.map((item) => (
           <div
             key={item.id}
-            className="group relative flex items-center gap-3 border-b border-line py-[15px]"
+            className="group border-line relative flex items-center gap-3 border-b py-[15px]"
           >
             <button
               onClick={() => removeItem(item.id)}
-              className="absolute -left-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-ink-muted opacity-0 transition-opacity hover:bg-[#F5F5F5] hover:text-ink group-hover:opacity-100"
+              className="text-ink-muted hover:text-ink absolute -left-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 hover:bg-[#F5F5F5]"
               aria-label="Remove item"
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -147,7 +147,7 @@ export default function InvoiceDetailsForm({
               placeholder="Item name"
               value={item.name}
               onChange={(e) => updateItem(item.id, "name", e.target.value)}
-              className="min-w-0 flex-1 border-none bg-transparent text-sm text-ink outline-none"
+              className="text-ink min-w-0 flex-1 border-none bg-transparent text-sm outline-none"
             />
             <input
               type="number"
@@ -157,7 +157,7 @@ export default function InvoiceDetailsForm({
               onChange={(e) =>
                 updateItem(item.id, "qty", Number(e.target.value) || 0)
               }
-              className="w-12 border-none bg-transparent text-right text-sm text-ink outline-none"
+              className="text-ink w-12 border-none bg-transparent text-right text-sm outline-none"
             />
             <input
               type="number"
@@ -168,14 +168,14 @@ export default function InvoiceDetailsForm({
               onChange={(e) =>
                 updateItem(item.id, "price", Number(e.target.value) || 0)
               }
-              className="w-20 border-none bg-transparent text-right text-sm text-ink outline-none"
+              className="text-ink w-20 border-none bg-transparent text-right text-sm outline-none"
             />
           </div>
         ))}
 
         <button
           onClick={addItem}
-          className="flex w-full cursor-pointer items-center gap-1.5 border-b border-line py-[15px] text-sm font-medium text-accent transition-opacity hover:opacity-75"
+          className="border-line text-accent flex w-full cursor-pointer items-center gap-1.5 border-b py-[15px] text-sm font-medium transition-opacity hover:opacity-75"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path
@@ -191,7 +191,7 @@ export default function InvoiceDetailsForm({
 
       {/* Note */}
       <div className="mt-8">
-        <p className="border-b border-line pb-2 text-[15px] text-ink-soft">
+        <p className="border-line text-ink-soft border-b pb-2 text-[15px]">
           Note
         </p>
         <textarea
@@ -199,7 +199,7 @@ export default function InvoiceDetailsForm({
           value={data.note}
           onChange={(e) => onChange({ ...data, note: e.target.value })}
           rows={2}
-          className="mt-3 w-full resize-none border-none bg-transparent pb-3 text-left text-sm text-ink outline-none"
+          className="text-ink mt-3 w-full resize-none border-none bg-transparent pb-3 text-left text-sm outline-none"
         />
       </div>
 
@@ -209,7 +209,7 @@ export default function InvoiceDetailsForm({
           onClick={() => setShowMoreOptions((v) => !v)}
           className="-mx-3 flex w-[calc(100%+24px)] cursor-pointer items-center justify-between rounded-lg px-3 py-3 transition-colors hover:bg-[#FAFAFA]"
         >
-          <span className="text-[15px] text-ink">More options</span>
+          <span className="text-ink text-[15px]">More options</span>
           <svg
             width="14"
             height="14"
@@ -239,7 +239,7 @@ export default function InvoiceDetailsForm({
                 onChange={(e) =>
                   onChange({ ...data, discount: Number(e.target.value) || 0 })
                 }
-                className="w-full border-none bg-transparent text-right text-sm text-ink outline-none"
+                className="text-ink w-full border-none bg-transparent text-right text-sm outline-none"
               />
             </FormRow>
             <FormRow label="Taxes" last>
@@ -252,9 +252,9 @@ export default function InvoiceDetailsForm({
                 onChange={(e) =>
                   onChange({ ...data, tax: Number(e.target.value) || 0 })
                 }
-                className="w-10 border-none bg-transparent text-right text-sm text-ink outline-none"
+                className="text-ink w-10 border-none bg-transparent text-right text-sm outline-none"
               />
-              <span className="ml-1 text-sm text-ink-muted">%</span>
+              <span className="text-ink-muted ml-1 text-sm">%</span>
             </FormRow>
           </div>
         )}

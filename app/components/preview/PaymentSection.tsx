@@ -1,11 +1,7 @@
 "use client";
 
 import type { PaymentMethod } from "../../lib/types";
-import {
-  type Currency,
-  assetByCode,
-  networkByCode,
-} from "../../lib/data";
+import { type Currency, assetByCode, networkByCode } from "../../lib/data";
 import { TokenDot } from "../ui";
 import { Dots, DotLine } from "./DotMatrix";
 import { MICRO } from "./Section";
@@ -26,13 +22,13 @@ function InstructionRow({
   if (!show) return null;
   return (
     <div className="flex items-start justify-between gap-4">
-      <span className="shrink-0 text-ink-muted">{label}</span>
+      <span className="text-ink-muted shrink-0">{label}</span>
       {value ? (
         <span
           className={
             mono
-              ? "break-all text-right text-xs leading-snug text-ink"
-              : "text-right text-ink"
+              ? "text-ink text-right text-xs leading-snug break-all"
+              : "text-ink text-right"
           }
         >
           {value}
@@ -75,10 +71,10 @@ export function PaymentSection({
               <div className="flex items-center gap-2.5">
                 <TokenDot color={asset.color} label={asset.name} size={28} />
                 <div>
-                  <p className="text-sm font-medium leading-tight text-ink">
+                  <p className="text-ink text-sm leading-tight font-medium">
                     {asset.name}
                   </p>
-                  <p className="text-xs leading-tight text-ink-muted">
+                  <p className="text-ink-muted text-xs leading-tight">
                     {asset.code}
                   </p>
                 </div>
@@ -117,7 +113,7 @@ export function PaymentSection({
 
       {/* fiat gets its own block under the crypto part */}
       {payment.fiat && (
-        <div className="grid grid-cols-2 border-t border-line px-8 py-7">
+        <div className="border-line grid grid-cols-2 border-t px-8 py-7">
           <div>
             <p className={MICRO}>Payable in</p>
             <div className="mt-3.5 flex items-center gap-2.5">
@@ -125,10 +121,10 @@ export function PaymentSection({
                 {currency.flag}
               </span>
               <div>
-                <p className="text-sm font-medium leading-tight text-ink">
+                <p className="text-ink text-sm leading-tight font-medium">
                   {currency.name}
                 </p>
-                <p className="text-xs leading-tight text-ink-muted">
+                <p className="text-ink-muted text-xs leading-tight">
                   {currency.code}
                 </p>
               </div>

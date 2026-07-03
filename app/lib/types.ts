@@ -143,7 +143,7 @@ export function calculateSubtotal(items: LineItem[]): number {
 export function calculateTotal(
   items: LineItem[],
   discount: number,
-  tax: number
+  tax: number,
 ): number {
   const subtotal = calculateSubtotal(items);
   const discounted = subtotal - discount;
@@ -151,9 +151,6 @@ export function calculateTotal(
   return Math.max(0, taxed);
 }
 
-export function formatCurrency(
-  amount: number,
-  symbol: string = "$"
-): string {
+export function formatCurrency(amount: number, symbol: string = "$"): string {
   return `${symbol}${amount.toFixed(2)}`;
 }
