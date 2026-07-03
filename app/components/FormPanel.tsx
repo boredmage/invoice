@@ -95,8 +95,8 @@ export default function FormPanel({
         {renderStep()}
       </div>
 
-      {/* bottom navigation pinned to the sidebar footer */}
-      <div className="sticky bottom-0 -mx-12 mt-auto flex items-stretch justify-between bg-white px-3 pb-3 pt-1">
+      {/* bottom navigation — in flow on mobile, pinned to the sidebar footer on desktop */}
+      <div className="-mx-6 mt-auto flex items-stretch justify-between bg-white px-3 pb-5 pt-1 lg:sticky lg:bottom-0 lg:-mx-12 lg:pb-3">
         {currentStep > 0 ? (
           <button
             onClick={onBack}

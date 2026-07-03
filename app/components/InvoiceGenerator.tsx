@@ -20,6 +20,15 @@ export default function InvoiceGenerator() {
   );
   const [showBanner, setShowBanner] = useState(true);
   const hydrated = useRef(false);
+  const asideRef = useRef<HTMLElement>(null);
+
+  // Mobile: the sheet rests low enough that scrolling up reveals the whole
+  // preview; start pre-scrolled so the first view is the usual card peek.
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 1023px)").matches && asideRef.current) {
+      window.scrollTo(0, Math.max(0, asideRef.current.offsetTop - 416));
+    }
+  }, []);
 
   // restore a saved draft (internal tool — everything stays in the browser)
   useEffect(() => {
@@ -74,14 +83,20 @@ export default function InvoiceGenerator() {
   );
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
-      {/* ── Left: sidebar ── */}
-      <aside className="print-hidden relative flex h-full w-[500px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-12 pt-12">
-          <Header />
+    <div className="flex min-h-screen w-full flex-col lg:h-screen lg:flex-row lg:overflow-hidden">
+      {/* ── Sidebar: bottom sheet on mobile (scrolls over the fixed preview,
+             sized by its content), left pane on desktop ── */}
+      <aside
+        ref={asideRef}
+        className="print-hidden relative z-10 order-2 mt-[532px] flex min-h-[calc(100dvh-416px)] w-full flex-col rounded-t-2xl bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.08)] lg:order-1 lg:mt-0 lg:min-h-0 lg:h-full lg:w-[500px] lg:shrink-0 lg:overflow-hidden lg:rounded-none lg:border-r lg:border-line lg:shadow-none"
+      >
+        <div className="flex min-h-0 flex-1 flex-col px-6 pt-8 lg:overflow-y-auto lg:px-12 lg:pt-12">
+          <div className="hidden lg:block">
+            <Header />
+          </div>
 
           {showBanner && currentStep < 5 && (
-            <div className="mt-5 flex items-center gap-2 rounded-lg bg-[#FAFAFA] py-2.5 pl-4 pr-3 text-[13px]">
+            <div className="flex items-center gap-2 rounded-lg bg-[#FAFAFA] py-2.5 pl-4 pr-3 text-[13px] lg:mt-5">
               <span className="font-semibold text-accent">NEW</span>
               <span className="text-[#DDDDDD]">|</span>
               <span className="text-ink-soft">
@@ -115,14 +130,20 @@ export default function InvoiceGenerator() {
         </div>
       </aside>
 
-      {/* ── Right: dotted canvas with live preview ── */}
-      <main className="dot-canvas relative h-full min-w-0 flex-1 overflow-y-auto">
-        <div className="flex justify-center px-10 py-10">
-          <InvoicePreview
-            invoiceData={invoiceData}
-            currentStep={currentStep}
-            onSectionClick={(step) => setCurrentStep(step)}
-          />
+      {/* ── Canvas: fixed backdrop on mobile (the sheet slides over it),
+             right pane on desktop ── */}
+      <main className="dot-canvas fixed inset-x-0 top-0 z-0 order-1 lg:static lg:order-2 lg:h-full lg:min-w-0 lg:flex-1 lg:overflow-y-auto">
+        <div className="px-6 pt-6 lg:hidden">
+          <Header />
+        </div>
+        <div className="flex h-[460px] justify-center overflow-hidden pt-6 lg:h-auto lg:overflow-visible lg:px-10 lg:py-10 lg:pt-10">
+          <div className="preview-scale w-[612px] shrink-0 origin-top scale-50 md:scale-75 lg:scale-100">
+            <InvoicePreview
+              invoiceData={invoiceData}
+              currentStep={currentStep}
+              onSectionClick={(step) => setCurrentStep(step)}
+            />
+          </div>
         </div>
       </main>
     </div>

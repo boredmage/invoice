@@ -47,13 +47,12 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
   };
 
   return (
-    <div className="flex h-full flex-col pt-16">
-      <h2 className="text-[44px] font-semibold leading-[1.1] tracking-[-0.02em] text-ink">
+    <div className="flex h-full min-h-[560px] flex-col pt-6 lg:min-h-0 lg:pt-16">
+      <h2 className="text-center text-[32px] font-semibold leading-[1.1] tracking-[-0.02em] text-ink lg:text-left lg:text-[44px]">
         Your invoice
-        <br />
-        is ready
+        <br className="hidden lg:block" /> is ready
       </h2>
-      <p className="mt-5 text-lg text-ink-soft">
+      <p className="mt-4 text-center text-lg text-ink-soft lg:mt-5 lg:text-left">
         Take a final look before downloading it.
       </p>
 
@@ -72,7 +71,7 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
               strokeLinejoin="round"
             />
           </svg>
-          Send to {clientName || "your client"}
+          Send to {clientName || "client"}
         </button>
 
         <button

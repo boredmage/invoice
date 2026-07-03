@@ -237,6 +237,10 @@
   .print-hidden {
     display: none !important;
   }
+  /* the mobile preview is scaled down for the peek — print at full size */
+  .preview-scale {
+    transform: none !important;
+  }
   /* active-step corner brackets are an editing aid — never print them */
   .brackets::before,
   .brackets::after,
