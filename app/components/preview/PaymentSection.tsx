@@ -2,7 +2,7 @@
 
 import type { PaymentMethod } from "../../lib/types";
 import { type Currency, assetByCode, networkByCode } from "../../lib/data";
-import { TokenDot } from "../ui";
+import { CurrencyIcon, TokenDot } from "../ui";
 import { Dots, DotLine } from "./DotMatrix";
 import { MICRO } from "./Section";
 
@@ -117,9 +117,11 @@ export function PaymentSection({
           <div>
             <p className={MICRO}>Payable in</p>
             <div className="mt-3.5 flex items-center gap-2.5">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F0F0F0] text-sm leading-none">
-                {currency.flag}
-              </span>
+              <CurrencyIcon
+                code={currency.code}
+                flag={currency.flag}
+                size={28}
+              />
               <div>
                 <p className="text-ink text-sm leading-tight font-medium">
                   {currency.name}

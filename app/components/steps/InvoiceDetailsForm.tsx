@@ -3,8 +3,7 @@
 import { useState } from "react";
 import type { InvoiceDetails, LineItem } from "../../lib/types";
 import { CURRENCIES, currencyByCode } from "../../lib/data";
-import { FormRow } from "../ui";
-import { SearchDropdown } from "../ui";
+import { CurrencyIcon, FormRow, SearchDropdown } from "../ui";
 
 interface InvoiceDetailsFormProps {
   data: InvoiceDetails;
@@ -70,7 +69,7 @@ export default function InvoiceDetailsForm({
             onClick={() => setShowCurrency((v) => !v)}
             className="flex cursor-pointer items-center gap-1.5 rounded-md px-1 py-0.5 transition-colors hover:bg-[#FAFAFA]"
           >
-            <span className="text-base leading-none">{currency.flag}</span>
+            <CurrencyIcon code={currency.code} flag={currency.flag} size={18} />
             <span className="text-ink text-sm font-medium">
               {currency.code}
             </span>
@@ -102,7 +101,7 @@ export default function InvoiceDetailsForm({
             key: c.code,
             name: c.name,
             code: c.code,
-            icon: <span className="text-base leading-none">{c.flag}</span>,
+            icon: <CurrencyIcon code={c.code} flag={c.flag} size={20} />,
             selected: c.code === data.currency,
           }))}
           onSelect={(code) => {
