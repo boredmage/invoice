@@ -3,6 +3,9 @@ export interface Currency {
   code: string;
   symbol: string;
   flag: string;
+  /* used in the generated PDF when `symbol` has no glyph in the embedded
+     latin-subset Geist font (₦, ₹, ₩, ₪, ₾, ৳ …) */
+  pdfSymbol?: string;
 }
 
 export const CURRENCIES: Currency[] = [
@@ -13,7 +16,13 @@ export const CURRENCIES: Currency[] = [
   { name: "UAE Dirham", code: "AED", symbol: "AED ", flag: "🇦🇪" },
   { name: "Argentine Peso", code: "ARS", symbol: "ARS ", flag: "🇦🇷" },
   { name: "Australian Dollar", code: "AUD", symbol: "A$", flag: "🇦🇺" },
-  { name: "Bangladeshi Taka", code: "BDT", symbol: "৳", flag: "🇧🇩" },
+  {
+    name: "Bangladeshi Taka",
+    code: "BDT",
+    symbol: "৳",
+    pdfSymbol: "BDT ",
+    flag: "🇧🇩",
+  },
   { name: "Bahraini Dinar", code: "BHD", symbol: "BHD ", flag: "🇧🇭" },
   { name: "Bermudian Dollar", code: "BMD", symbol: "BD$", flag: "🇧🇲" },
   { name: "Brazilian Real", code: "BRL", symbol: "R$", flag: "🇧🇷" },
@@ -22,18 +31,49 @@ export const CURRENCIES: Currency[] = [
   { name: "Chinese Yuan", code: "CNY", symbol: "¥", flag: "🇨🇳" },
   { name: "Czech Koruna", code: "CZK", symbol: "Kč ", flag: "🇨🇿" },
   { name: "Danish Krone", code: "DKK", symbol: "kr ", flag: "🇩🇰" },
-  { name: "Georgian Lari", code: "GEL", symbol: "₾", flag: "🇬🇪" },
+  {
+    name: "Georgian Lari",
+    code: "GEL",
+    symbol: "₾",
+    pdfSymbol: "GEL ",
+    flag: "🇬🇪",
+  },
   { name: "Hong Kong Dollar", code: "HKD", symbol: "HK$", flag: "🇭🇰" },
   { name: "Hungarian Forint", code: "HUF", symbol: "Ft ", flag: "🇭🇺" },
   { name: "Indonesian Rupiah", code: "IDR", symbol: "Rp ", flag: "🇮🇩" },
-  { name: "Israeli New Shekel", code: "ILS", symbol: "₪", flag: "🇮🇱" },
-  { name: "Indian Rupee", code: "INR", symbol: "₹", flag: "🇮🇳" },
+  {
+    name: "Israeli New Shekel",
+    code: "ILS",
+    symbol: "₪",
+    pdfSymbol: "ILS ",
+    flag: "🇮🇱",
+  },
+  {
+    name: "Indian Rupee",
+    code: "INR",
+    symbol: "₹",
+    pdfSymbol: "INR ",
+    flag: "🇮🇳",
+  },
   { name: "Japanese Yen", code: "JPY", symbol: "¥", flag: "🇯🇵" },
-  { name: "South Korean Won", code: "KRW", symbol: "₩", flag: "🇰🇷" },
+  {
+    name: "South Korean Won",
+    code: "KRW",
+    symbol: "₩",
+    pdfSymbol: "KRW ",
+    flag: "🇰🇷",
+  },
   { name: "Kuwaiti Dinar", code: "KWD", symbol: "KWD ", flag: "🇰🇼" },
   { name: "Sri Lankan Rupee", code: "LKR", symbol: "Rs ", flag: "🇱🇰" },
   { name: "Myanmar Kyat", code: "MMK", symbol: "K ", flag: "🇲🇲" },
   { name: "Mexican Peso", code: "MXN", symbol: "MX$", flag: "🇲🇽" },
+  {
+    name: "Nigerian Naira",
+    code: "NGN",
+    symbol: "₦",
+    pdfSymbol: "NGN ",
+    flag: "🇳🇬",
+  },
 ];
 
 export interface Network {

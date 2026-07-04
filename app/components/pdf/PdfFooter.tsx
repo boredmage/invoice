@@ -109,7 +109,7 @@ export function PdfFooter({
             >
               <View style={{ ...styles.tokenDot, backgroundColor: "#F0F0F0" }}>
                 <Text style={{ fontSize: 12, fontWeight: 600 }}>
-                  {currency.symbol.trim().charAt(0)}
+                  {(currency.pdfSymbol ?? currency.symbol).trim().charAt(0)}
                 </Text>
               </View>
               <View>

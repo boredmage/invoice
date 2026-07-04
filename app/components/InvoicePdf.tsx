@@ -15,7 +15,8 @@ export default function InvoicePdf({
 }) {
   const { sender, client, details, payment, terms } = invoiceData;
   const currency = currencyByCode(details.currency);
-  const fmtMoney = makeMoneyFormatter(currency.symbol);
+  // the embedded latin-subset font lacks some currency glyphs — fall back
+  const fmtMoney = makeMoneyFormatter(currency.pdfSymbol ?? currency.symbol);
 
   return (
     <Document
