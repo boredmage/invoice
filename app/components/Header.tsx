@@ -16,11 +16,9 @@ export default function Header() {
       </div>
 
       <div className="leading-tight">
-        <h1 className="text-ink text-[15px] font-semibold">
-          Crypto Invoice Generator
-        </h1>
+        <h1 className="text-ink text-[15px] font-semibold">Invoice</h1>
         <p className="text-ink-muted text-xs">
-          Internal edition — data stays in your browser
+          Internal edition. Data stays in your browser
         </p>
       </div>
     </header>

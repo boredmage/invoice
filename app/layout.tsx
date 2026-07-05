@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Crypto Invoice Generator",
+  title: "Invoice",
   description:
     "Prepare crypto-ready invoices locally. Internal tool — all data stays in your browser.",
 };
