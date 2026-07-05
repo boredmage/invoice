@@ -57,8 +57,8 @@ export function Dots({
             if (dx * dx + dy * dy > (radius - 1) * (radius - 1)) continue;
           }
           if (a) {
-            ctx.fillStyle = "#0167FF";
-            ctx.globalAlpha = a * 0.6;
+            ctx.fillStyle = "#64B300"; // brand green (matches --color-preview-accent)
+            ctx.globalAlpha = a * 0.85;
           } else {
             ctx.fillStyle = "#8A8A8A";
             ctx.globalAlpha = 0.28;

@@ -3,6 +3,12 @@
 
 @theme inline {
   --color-accent: #0167ff;
+  /* green brand accent used on the invoice preview (section brackets,
+     placeholder dots) — a deeper, more saturated take on the logo's #c1ff72
+     that keeps its yellow-lime hue (~86°) while staying legible on white;
+     kept separate from --color-accent so form controls and accent-coloured
+     text stay legibly blue */
+  --color-preview-accent: #64b300;
   --color-ink: #000000;
   --color-ink-soft: #494949;
   --color-ink-muted: #999999;
@@ -59,7 +65,7 @@
     background-position: 0 0;
   }
 
-  /* blue corner brackets marking the active preview section.
+  /* green corner brackets marking the active preview section.
      Heartbeat: the frame contracts inward a touch, springs back out
      past rest, then settles. Each corner translates along its own
      inward diagonal (--bx/--by). */
@@ -80,32 +86,32 @@
     --by: 3px;
     top: 4px;
     left: 4px;
-    border-top: 2px solid var(--color-accent);
-    border-left: 2px solid var(--color-accent);
+    border-top: 2px solid var(--color-preview-accent);
+    border-left: 2px solid var(--color-preview-accent);
   }
   .brackets::after {
     --bx: -3px;
     --by: 3px;
     top: 4px;
     right: 4px;
-    border-top: 2px solid var(--color-accent);
-    border-right: 2px solid var(--color-accent);
+    border-top: 2px solid var(--color-preview-accent);
+    border-right: 2px solid var(--color-preview-accent);
   }
   .brackets > .bracket-b::before {
     --bx: 3px;
     --by: -3px;
     bottom: 4px;
     left: 4px;
-    border-bottom: 2px solid var(--color-accent);
-    border-left: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-preview-accent);
+    border-left: 2px solid var(--color-preview-accent);
   }
   .brackets > .bracket-b::after {
     --bx: -3px;
     --by: -3px;
     bottom: 4px;
     right: 4px;
-    border-bottom: 2px solid var(--color-accent);
-    border-right: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-preview-accent);
+    border-right: 2px solid var(--color-preview-accent);
   }
 
   @keyframes bracketBeat {
