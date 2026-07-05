@@ -1,6 +1,11 @@
 import { Text, View } from "@react-pdf/renderer";
 import type { PaymentMethod } from "../../lib/types";
-import { type Currency, assetByCode, networkByCode } from "../../lib/data";
+import {
+  type Currency,
+  assetByCode,
+  bankFields,
+  networkByCode,
+} from "../../lib/data";
 import { chunkString } from "../../lib/format";
 import { MUTED, styles } from "./theme";
 
@@ -41,9 +46,8 @@ export function PdfFooter({
   const cryptoOn = payment.crypto !== false;
   const asset = payment.asset ? assetByCode(payment.asset) : undefined;
   const network = payment.network ? networkByCode(payment.network) : undefined;
-  const hasFiat =
-    payment.fiat &&
-    !!(payment.bankName || payment.accountNumber || payment.routingNumber);
+  const bank = bankFields(currency.code);
+  const hasFiat = payment.fiat && bank.some((f) => payment[f.key]);
 
   return (
     <View style={styles.footer}>
@@ -134,13 +138,14 @@ export function PdfFooter({
             <Text style={{ ...styles.micro, marginBottom: 14 }}>
               Instructions
             </Text>
-            <InstRow label="Bank" value={payment.bankName} />
-            <InstRow label="Account" value={payment.accountNumber} mono />
-            <InstRow
-              label="Routing / IBAN"
-              value={payment.routingNumber}
-              mono
-            />
+            {bank.map((field) => (
+              <InstRow
+                key={field.key}
+                label={field.label}
+                value={payment[field.key]}
+                mono={field.mono}
+              />
+            ))}
           </View>
         </View>
       ) : null}

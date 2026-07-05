@@ -1,7 +1,12 @@
 "use client";
 
 import type { PaymentMethod } from "../../lib/types";
-import { type Currency, assetByCode, networkByCode } from "../../lib/data";
+import {
+  type Currency,
+  assetByCode,
+  bankFields,
+  networkByCode,
+} from "../../lib/data";
 import { CurrencyIcon, TokenDot } from "../ui";
 import { Dots, DotLine } from "./DotMatrix";
 import { MICRO } from "./Section";
@@ -52,12 +57,12 @@ export function PaymentSection({
   const cryptoOn = payment.crypto !== false;
   const asset = payment.asset ? assetByCode(payment.asset) : undefined;
   const network = payment.network ? networkByCode(payment.network) : undefined;
+  const bank = bankFields(currency.code);
 
   // placeholders only exist while the whole section is empty
   const paymentEmpty = !(
     (cryptoOn && (asset || network || payment.walletAddress)) ||
-    (payment.fiat &&
-      (payment.bankName || payment.accountNumber || payment.routingNumber))
+    (payment.fiat && bank.some((f) => payment[f.key]))
   );
 
   return (
@@ -135,26 +140,16 @@ export function PaymentSection({
           <div>
             <p className={MICRO}>Instructions</p>
             <div className="mt-3.5 space-y-2 text-[13px]">
-              <InstructionRow
-                label="Bank"
-                value={payment.bankName}
-                placeholderWidth={92}
-                show={!!payment.bankName || paymentEmpty}
-              />
-              <InstructionRow
-                label="Account"
-                value={payment.accountNumber}
-                placeholderWidth={120}
-                show={!!payment.accountNumber || paymentEmpty}
-                mono
-              />
-              <InstructionRow
-                label="Routing / IBAN"
-                value={payment.routingNumber}
-                placeholderWidth={100}
-                show={!!payment.routingNumber || paymentEmpty}
-                mono
-              />
+              {bank.map((field) => (
+                <InstructionRow
+                  key={field.key}
+                  label={field.label}
+                  value={payment[field.key]}
+                  placeholderWidth={field.mono ? 120 : 92}
+                  show={!!payment[field.key] || paymentEmpty}
+                  mono={field.mono}
+                />
+              ))}
             </div>
           </div>
         </div>

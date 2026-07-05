@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import type { PaymentMethod } from "../../lib/types";
-import { ASSETS, NETWORKS } from "../../lib/data";
+import { ASSETS, NETWORKS, bankFields } from "../../lib/data";
 import { AddTrigger, FormRow, RowInput, SearchDropdown, TokenDot } from "../ui";
 
 interface PaymentMethodFormProps {
   data: PaymentMethod;
+  currencyCode: string;
   onChange: (data: PaymentMethod) => void;
 }
 
 export default function PaymentMethodForm({
   data,
+  currencyCode,
   onChange,
 }: PaymentMethodFormProps) {
   const [manual, setManual] = useState(
@@ -22,6 +24,9 @@ export default function PaymentMethodForm({
 
   // treat a legacy draft with no `crypto` field as crypto-enabled
   const cryptoOn = data.crypto !== false;
+
+  // bank fields adapt to the invoice currency's country
+  const bank = bankFields(currencyCode);
 
   const selectedNetwork = NETWORKS.find((n) => n.code === data.network);
   const selectedAsset = ASSETS.find((a) => a.code === data.asset);
@@ -226,36 +231,22 @@ export default function PaymentMethodForm({
 
         {data.fiat && (
           <div className="step-transition">
-            <FormRow label="Bank name">
-              <RowInput
-                type="text"
-                placeholder="e.g. Chase"
-                value={data.bankName}
-                onChange={(e) =>
-                  onChange({ ...data, bankName: e.target.value })
-                }
-              />
-            </FormRow>
-            <FormRow label="Account number">
-              <RowInput
-                type="text"
-                placeholder="000123456789"
-                value={data.accountNumber}
-                onChange={(e) =>
-                  onChange({ ...data, accountNumber: e.target.value })
-                }
-              />
-            </FormRow>
-            <FormRow label="Routing / IBAN" last>
-              <RowInput
-                type="text"
-                placeholder="021000021"
-                value={data.routingNumber}
-                onChange={(e) =>
-                  onChange({ ...data, routingNumber: e.target.value })
-                }
-              />
-            </FormRow>
+            {bank.map((field, i) => (
+              <FormRow
+                key={field.key}
+                label={field.label}
+                last={i === bank.length - 1}
+              >
+                <RowInput
+                  type="text"
+                  placeholder={field.placeholder}
+                  value={data[field.key]}
+                  onChange={(e) =>
+                    onChange({ ...data, [field.key]: e.target.value })
+                  }
+                />
+              </FormRow>
+            ))}
           </div>
         )}
       </div>

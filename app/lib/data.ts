@@ -79,6 +79,84 @@ export const CURRENCIES: Currency[] = CURRENCY_CATALOG.filter((c) =>
   ENABLED_CURRENCY_CODES.has(c.code),
 );
 
+export interface BankField {
+  /* which stored PaymentMethod bank field this maps to */
+  key: "bankName" | "accountNumber" | "routingNumber";
+  label: string;
+  placeholder: string;
+  /* account numbers / IBAN / codes render monospace + wrap-friendly */
+  mono?: boolean;
+}
+
+/* Bank-transfer details differ by country. Keyed by the invoice currency —
+   you're paid into an account in that currency's country — reusing the three
+   stored bank fields with country-appropriate labels and formats. Unlisted
+   currencies fall back to the US layout. */
+export const BANK_FIELDS: Record<string, BankField[]> = {
+  // United States — 9-digit ABA routing number + account number
+  USD: [
+    { key: "bankName", label: "Bank name", placeholder: "e.g. Chase" },
+    {
+      key: "accountNumber",
+      label: "Account number",
+      placeholder: "000123456789",
+      mono: true,
+    },
+    {
+      key: "routingNumber",
+      label: "Routing number (ABA)",
+      placeholder: "021000021",
+      mono: true,
+    },
+  ],
+  // United Kingdom — 8-digit account number + 6-digit sort code
+  GBP: [
+    { key: "bankName", label: "Bank name", placeholder: "e.g. Barclays" },
+    {
+      key: "accountNumber",
+      label: "Account number",
+      placeholder: "12345678",
+      mono: true,
+    },
+    {
+      key: "routingNumber",
+      label: "Sort code",
+      placeholder: "12-34-56",
+      mono: true,
+    },
+  ],
+  // Eurozone (SEPA) — IBAN + BIC/SWIFT
+  EUR: [
+    { key: "bankName", label: "Bank name", placeholder: "e.g. Deutsche Bank" },
+    {
+      key: "accountNumber",
+      label: "IBAN",
+      placeholder: "DE89 3704 0044 0532 0130 00",
+      mono: true,
+    },
+    {
+      key: "routingNumber",
+      label: "BIC / SWIFT",
+      placeholder: "COBADEFFXXX",
+      mono: true,
+    },
+  ],
+  // Nigeria — 10-digit NUBAN; bank name + NUBAN resolves the account
+  NGN: [
+    { key: "bankName", label: "Bank name", placeholder: "e.g. GTBank" },
+    {
+      key: "accountNumber",
+      label: "Account number (NUBAN)",
+      placeholder: "0123456789",
+      mono: true,
+    },
+  ],
+};
+
+export function bankFields(code: string): BankField[] {
+  return BANK_FIELDS[code] ?? BANK_FIELDS.USD;
+}
+
 export interface Network {
   name: string;
   code: string;

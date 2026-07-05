@@ -64,6 +64,7 @@ export default function FormPanel({
         return (
           <PaymentMethodForm
             data={invoiceData.payment}
+            currencyCode={invoiceData.details.currency}
             onChange={(payment) =>
               updateInvoiceData((prev) => ({ ...prev, payment }))
             }
