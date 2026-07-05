@@ -2,79 +2,82 @@ export interface Currency {
   name: string;
   code: string;
   symbol: string;
-  flag: string;
   /* used in the generated PDF when `symbol` has no glyph in the embedded
      latin-subset Geist font (₦, ₹, ₩, ₪, ₾, ৳ …) */
   pdfSymbol?: string;
 }
 
-export const CURRENCIES: Currency[] = [
-  { name: "US Dollar", code: "USD", symbol: "$", flag: "🇺🇸" },
-  { name: "Euro", code: "EUR", symbol: "€", flag: "🇪🇺" },
-  { name: "British Pound", code: "GBP", symbol: "£", flag: "🇬🇧" },
-  { name: "Canadian Dollar", code: "CAD", symbol: "CA$", flag: "🇨🇦" },
-  { name: "UAE Dirham", code: "AED", symbol: "AED ", flag: "🇦🇪" },
-  { name: "Argentine Peso", code: "ARS", symbol: "ARS ", flag: "🇦🇷" },
-  { name: "Australian Dollar", code: "AUD", symbol: "A$", flag: "🇦🇺" },
+/* Full catalog of known currencies. The picker only offers the subset in
+   ENABLED_CURRENCY_CODES below — add codes there to bring the rest back. */
+const CURRENCY_CATALOG: Currency[] = [
+  { name: "US Dollar", code: "USD", symbol: "$" },
+  { name: "Euro", code: "EUR", symbol: "€" },
+  { name: "British Pound", code: "GBP", symbol: "£" },
+  { name: "Canadian Dollar", code: "CAD", symbol: "CA$" },
+  { name: "UAE Dirham", code: "AED", symbol: "AED " },
+  { name: "Argentine Peso", code: "ARS", symbol: "ARS " },
+  { name: "Australian Dollar", code: "AUD", symbol: "A$" },
   {
     name: "Bangladeshi Taka",
     code: "BDT",
     symbol: "৳",
     pdfSymbol: "BDT ",
-    flag: "🇧🇩",
   },
-  { name: "Bahraini Dinar", code: "BHD", symbol: "BHD ", flag: "🇧🇭" },
-  { name: "Bermudian Dollar", code: "BMD", symbol: "BD$", flag: "🇧🇲" },
-  { name: "Brazilian Real", code: "BRL", symbol: "R$", flag: "🇧🇷" },
-  { name: "Swiss Franc", code: "CHF", symbol: "CHF ", flag: "🇨🇭" },
-  { name: "Chilean Peso", code: "CLP", symbol: "CLP ", flag: "🇨🇱" },
-  { name: "Chinese Yuan", code: "CNY", symbol: "¥", flag: "🇨🇳" },
-  { name: "Czech Koruna", code: "CZK", symbol: "Kč ", flag: "🇨🇿" },
-  { name: "Danish Krone", code: "DKK", symbol: "kr ", flag: "🇩🇰" },
+  { name: "Bahraini Dinar", code: "BHD", symbol: "BHD " },
+  { name: "Bermudian Dollar", code: "BMD", symbol: "BD$" },
+  { name: "Brazilian Real", code: "BRL", symbol: "R$" },
+  { name: "Swiss Franc", code: "CHF", symbol: "CHF " },
+  { name: "Chilean Peso", code: "CLP", symbol: "CLP " },
+  { name: "Chinese Yuan", code: "CNY", symbol: "¥" },
+  { name: "Czech Koruna", code: "CZK", symbol: "Kč " },
+  { name: "Danish Krone", code: "DKK", symbol: "kr " },
   {
     name: "Georgian Lari",
     code: "GEL",
     symbol: "₾",
     pdfSymbol: "GEL ",
-    flag: "🇬🇪",
   },
-  { name: "Hong Kong Dollar", code: "HKD", symbol: "HK$", flag: "🇭🇰" },
-  { name: "Hungarian Forint", code: "HUF", symbol: "Ft ", flag: "🇭🇺" },
-  { name: "Indonesian Rupiah", code: "IDR", symbol: "Rp ", flag: "🇮🇩" },
+  { name: "Hong Kong Dollar", code: "HKD", symbol: "HK$" },
+  { name: "Hungarian Forint", code: "HUF", symbol: "Ft " },
+  { name: "Indonesian Rupiah", code: "IDR", symbol: "Rp " },
   {
     name: "Israeli New Shekel",
     code: "ILS",
     symbol: "₪",
     pdfSymbol: "ILS ",
-    flag: "🇮🇱",
   },
   {
     name: "Indian Rupee",
     code: "INR",
     symbol: "₹",
     pdfSymbol: "INR ",
-    flag: "🇮🇳",
   },
-  { name: "Japanese Yen", code: "JPY", symbol: "¥", flag: "🇯🇵" },
+  { name: "Japanese Yen", code: "JPY", symbol: "¥" },
   {
     name: "South Korean Won",
     code: "KRW",
     symbol: "₩",
     pdfSymbol: "KRW ",
-    flag: "🇰🇷",
   },
-  { name: "Kuwaiti Dinar", code: "KWD", symbol: "KWD ", flag: "🇰🇼" },
-  { name: "Sri Lankan Rupee", code: "LKR", symbol: "Rs ", flag: "🇱🇰" },
-  { name: "Myanmar Kyat", code: "MMK", symbol: "K ", flag: "🇲🇲" },
-  { name: "Mexican Peso", code: "MXN", symbol: "MX$", flag: "🇲🇽" },
+  { name: "Kuwaiti Dinar", code: "KWD", symbol: "KWD " },
+  { name: "Sri Lankan Rupee", code: "LKR", symbol: "Rs " },
+  { name: "Myanmar Kyat", code: "MMK", symbol: "K " },
+  { name: "Mexican Peso", code: "MXN", symbol: "MX$" },
   {
     name: "Nigerian Naira",
     code: "NGN",
     symbol: "₦",
     pdfSymbol: "NGN ",
-    flag: "🇳🇬",
   },
 ];
+
+/* Currencies currently offered in the invoice form. Temporarily narrowed to
+   these four — widen this set to re-enable the rest of CURRENCY_CATALOG. */
+const ENABLED_CURRENCY_CODES = new Set(["NGN", "USD", "GBP", "EUR"]);
+
+export const CURRENCIES: Currency[] = CURRENCY_CATALOG.filter((c) =>
+  ENABLED_CURRENCY_CODES.has(c.code),
+);
 
 export interface Network {
   name: string;
@@ -132,7 +135,7 @@ export const ASSETS: Asset[] = [
 ];
 
 export function currencyByCode(code: string): Currency {
-  return CURRENCIES.find((c) => c.code === code) ?? CURRENCIES[0];
+  return CURRENCY_CATALOG.find((c) => c.code === code) ?? CURRENCY_CATALOG[0];
 }
 
 export function assetByCode(code: string): Asset | undefined {

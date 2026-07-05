@@ -27,6 +27,7 @@ export interface InvoiceDetails {
 }
 
 export interface PaymentMethod {
+  crypto: boolean;
   method: "wallet" | "manual" | null;
   network: string;
   walletAddress: string;
@@ -99,6 +100,7 @@ export function getDefaultInvoiceData(): InvoiceData {
       tax: 0,
     },
     payment: {
+      crypto: true,
       method: null,
       network: "",
       walletAddress: "",

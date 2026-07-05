@@ -4,14 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { type StepId, STEPS } from "../lib/types";
 import { useInvoiceDraft } from "../lib/useInvoiceDraft";
 import Header from "./Header";
-import Banner from "./Banner";
 import FormPanel from "./FormPanel";
 import InvoicePreview from "./InvoicePreview";
 
 export default function InvoiceGenerator() {
   const { invoiceData, updateInvoiceData, resetDraft } = useInvoiceDraft();
   const [currentStep, setCurrentStep] = useState<StepId>(0);
-  const [showBanner, setShowBanner] = useState(true);
   const asideRef = useRef<HTMLElement>(null);
 
   // Mobile: the sheet rests low enough that scrolling up reveals the whole
@@ -49,10 +47,6 @@ export default function InvoiceGenerator() {
           <div className="hidden lg:block">
             <Header />
           </div>
-
-          {showBanner && currentStep < 5 && (
-            <Banner onDismiss={() => setShowBanner(false)} />
-          )}
 
           <FormPanel
             currentStep={currentStep}

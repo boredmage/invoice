@@ -49,79 +49,78 @@ export function PaymentSection({
   payment: PaymentMethod;
   currency: Currency;
 }) {
+  const cryptoOn = payment.crypto !== false;
   const asset = payment.asset ? assetByCode(payment.asset) : undefined;
   const network = payment.network ? networkByCode(payment.network) : undefined;
 
   // placeholders only exist while the whole section is empty
   const paymentEmpty = !(
-    asset ||
-    network ||
-    payment.walletAddress ||
+    (cryptoOn && (asset || network || payment.walletAddress)) ||
     (payment.fiat &&
       (payment.bankName || payment.accountNumber || payment.routingNumber))
   );
 
   return (
     <>
-      <div className="grid grid-cols-2 px-8 py-7">
-        <div>
-          <p className={MICRO}>Payable in</p>
-          <div className="mt-3.5">
-            {asset ? (
-              <div className="flex items-center gap-2.5">
-                <TokenDot color={asset.color} label={asset.name} size={28} />
-                <div>
-                  <p className="text-ink text-sm leading-tight font-medium">
-                    {asset.name}
-                  </p>
-                  <p className="text-ink-muted text-xs leading-tight">
-                    {asset.code}
-                  </p>
+      {cryptoOn && (
+        <div className="grid grid-cols-2 px-8 py-7">
+          <div>
+            <p className={MICRO}>Payable in</p>
+            <div className="mt-3.5">
+              {asset ? (
+                <div className="flex items-center gap-2.5">
+                  <TokenDot color={asset.color} label={asset.name} size={28} />
+                  <div>
+                    <p className="text-ink text-sm leading-tight font-medium">
+                      {asset.name}
+                    </p>
+                    <p className="text-ink-muted text-xs leading-tight">
+                      {asset.code}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ) : paymentEmpty ? (
-              <div className="flex items-center gap-2.5">
-                <Dots w={28} h={28} circle />
-                <span className="space-y-1.5">
-                  <DotLine widths={[64]} />
-                  <DotLine widths={[34]} h={8} />
-                </span>
-              </div>
-            ) : null}
+              ) : paymentEmpty ? (
+                <div className="flex items-center gap-2.5">
+                  <Dots w={28} h={28} circle />
+                  <span className="space-y-1.5">
+                    <DotLine widths={[64]} />
+                    <DotLine widths={[34]} h={8} />
+                  </span>
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          <div>
+            <p className={MICRO}>Instructions</p>
+            <div className="mt-3.5 space-y-2 text-[13px]">
+              <InstructionRow
+                label="Network"
+                value={network?.name ?? ""}
+                placeholderWidth={92}
+                show={!!network || paymentEmpty}
+              />
+              <InstructionRow
+                label="Wallet"
+                value={payment.walletAddress}
+                placeholderWidth={140}
+                show={!!payment.walletAddress || paymentEmpty}
+                mono
+              />
+            </div>
           </div>
         </div>
+      )}
 
-        <div>
-          <p className={MICRO}>Instructions</p>
-          <div className="mt-3.5 space-y-2 text-[13px]">
-            <InstructionRow
-              label="Network"
-              value={network?.name ?? ""}
-              placeholderWidth={92}
-              show={!!network || paymentEmpty}
-            />
-            <InstructionRow
-              label="Wallet"
-              value={payment.walletAddress}
-              placeholderWidth={140}
-              show={!!payment.walletAddress || paymentEmpty}
-              mono
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* fiat gets its own block under the crypto part */}
+      {/* fiat gets its own block — bordered off from the crypto block above it */}
       {payment.fiat && (
-        <div className="border-line grid grid-cols-2 border-t px-8 py-7">
+        <div
+          className={`grid grid-cols-2 px-8 py-7 ${cryptoOn ? "border-line border-t" : ""}`}
+        >
           <div>
             <p className={MICRO}>Payable in</p>
             <div className="mt-3.5 flex items-center gap-2.5">
-              <CurrencyIcon
-                code={currency.code}
-                flag={currency.flag}
-                size={28}
-              />
+              <CurrencyIcon code={currency.code} size={28} />
               <div>
                 <p className="text-ink text-sm leading-tight font-medium">
                   {currency.name}

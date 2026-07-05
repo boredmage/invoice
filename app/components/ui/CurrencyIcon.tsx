@@ -3,14 +3,12 @@
 import { useState } from "react";
 
 /* round currency icon served from public/currency/<code>.svg,
-   falling back to the flag emoji if the file is missing */
+   falling back to the currency code if the file is missing */
 export function CurrencyIcon({
   code,
-  flag,
   size = 20,
 }: {
   code: string;
-  flag: string;
   size?: number;
 }) {
   const [failed, setFailed] = useState(false);
@@ -18,10 +16,10 @@ export function CurrencyIcon({
   if (failed) {
     return (
       <span
-        className="flex shrink-0 items-center justify-center leading-none"
-        style={{ width: size, height: size, fontSize: size * 0.8 }}
+        className="bg-canvas text-ink-muted flex shrink-0 items-center justify-center rounded-full font-medium uppercase"
+        style={{ width: size, height: size, fontSize: size * 0.42 }}
       >
-        {flag}
+        {code.slice(0, 2)}
       </span>
     );
   }

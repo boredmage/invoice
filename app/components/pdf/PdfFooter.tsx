@@ -38,6 +38,7 @@ export function PdfFooter({
   payment: PaymentMethod;
   currency: Currency;
 }) {
+  const cryptoOn = payment.crypto !== false;
   const asset = payment.asset ? assetByCode(payment.asset) : undefined;
   const network = payment.network ? networkByCode(payment.network) : undefined;
   const hasFiat =
@@ -46,57 +47,63 @@ export function PdfFooter({
 
   return (
     <View style={styles.footer}>
-      <View style={styles.footerCols}>
-        <View style={styles.footerCol}>
-          <Text style={styles.micro}>Payable in</Text>
-          {asset ? (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 14,
-              }}
-            >
+      {cryptoOn ? (
+        <View style={styles.footerCols}>
+          <View style={styles.footerCol}>
+            <Text style={styles.micro}>Payable in</Text>
+            {asset ? (
               <View
-                style={{ ...styles.tokenDot, backgroundColor: asset.color }}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 14,
+                }}
               >
-                <Text
-                  style={{ color: "#FFFFFF", fontSize: 12, fontWeight: 600 }}
+                <View
+                  style={{ ...styles.tokenDot, backgroundColor: asset.color }}
                 >
-                  {asset.name.charAt(0).toUpperCase()}
-                </Text>
+                  <Text
+                    style={{ color: "#FFFFFF", fontSize: 12, fontWeight: 600 }}
+                  >
+                    {asset.name.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={{ fontSize: 11, fontWeight: 500 }}>
+                    {asset.name}
+                  </Text>
+                  <Text style={{ fontSize: 9.5, color: MUTED, marginTop: 2 }}>
+                    {asset.code}
+                  </Text>
+                </View>
               </View>
-              <View>
-                <Text style={{ fontSize: 11, fontWeight: 500 }}>
-                  {asset.name}
-                </Text>
-                <Text style={{ fontSize: 9.5, color: MUTED, marginTop: 2 }}>
-                  {asset.code}
-                </Text>
-              </View>
-            </View>
-          ) : null}
-        </View>
+            ) : null}
+          </View>
 
-        <View style={styles.footerCol}>
-          <Text style={{ ...styles.micro, marginBottom: 14 }}>
-            Instructions
-          </Text>
-          <InstRow label="Network" value={network?.name ?? ""} />
-          <InstRow label="Wallet" value={payment.walletAddress} mono />
+          <View style={styles.footerCol}>
+            <Text style={{ ...styles.micro, marginBottom: 14 }}>
+              Instructions
+            </Text>
+            <InstRow label="Network" value={network?.name ?? ""} />
+            <InstRow label="Wallet" value={payment.walletAddress} mono />
+          </View>
         </View>
-      </View>
+      ) : null}
 
-      {/* fiat: its own block under the crypto part */}
+      {/* fiat: its own block, bordered off from the crypto block above it */}
       {hasFiat ? (
         <View
-          style={{
-            ...styles.footerCols,
-            borderTopWidth: 1,
-            borderTopColor: "#ECECEC",
-            marginTop: 18,
-            paddingTop: 18,
-          }}
+          style={
+            cryptoOn
+              ? {
+                  ...styles.footerCols,
+                  borderTopWidth: 1,
+                  borderTopColor: "#ECECEC",
+                  marginTop: 18,
+                  paddingTop: 18,
+                }
+              : styles.footerCols
+          }
         >
           <View style={styles.footerCol}>
             <Text style={styles.micro}>Payable in</Text>

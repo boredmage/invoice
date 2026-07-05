@@ -69,7 +69,7 @@ export default function InvoiceDetailsForm({
             onClick={() => setShowCurrency((v) => !v)}
             className="flex cursor-pointer items-center gap-1.5 rounded-md px-1 py-0.5 transition-colors hover:bg-[#FAFAFA]"
           >
-            <CurrencyIcon code={currency.code} flag={currency.flag} size={18} />
+            <CurrencyIcon code={currency.code} size={18} />
             <span className="text-ink text-sm font-medium">
               {currency.code}
             </span>
@@ -101,7 +101,7 @@ export default function InvoiceDetailsForm({
             key: c.code,
             name: c.name,
             code: c.code,
-            icon: <CurrencyIcon code={c.code} flag={c.flag} size={20} />,
+            icon: <CurrencyIcon code={c.code} size={20} />,
             selected: c.code === data.currency,
           }))}
           onSelect={(code) => {
