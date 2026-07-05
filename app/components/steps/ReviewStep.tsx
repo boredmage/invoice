@@ -10,20 +10,6 @@ interface ReviewStepProps {
 
 export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
   const [downloading, setDownloading] = useState(false);
-  const clientName = invoiceData.client.companyName.trim();
-  const clientEmail = invoiceData.client.email.trim();
-
-  const handleSend = () => {
-    const subject = encodeURIComponent(
-      `Invoice ${invoiceData.terms.invoiceNumber} from ${
-        invoiceData.sender.companyName || "us"
-      }`,
-    );
-    const body = encodeURIComponent(
-      `Hi,\n\nPlease find invoice ${invoiceData.terms.invoiceNumber} attached.\n\nIssue date: ${invoiceData.terms.issueDate}\nDue date: ${invoiceData.terms.dueDate}\n\nThank you!`,
-    );
-    window.location.href = `mailto:${clientEmail}?subject=${subject}&body=${body}`;
-  };
 
   const handleDownload = async () => {
     if (downloading) return;
@@ -58,26 +44,9 @@ export default function ReviewStep({ invoiceData, onReset }: ReviewStepProps) {
 
       <div className="mt-12 flex flex-col items-center gap-5">
         <button
-          onClick={handleSend}
-          disabled={!clientEmail}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#1c1c1c] py-3.5 text-[15px] font-medium text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)] transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
-          title={clientEmail ? undefined : "Add a client email first"}
-        >
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M14.5 1.5L7.5 8.5M14.5 1.5L10 14.5L7.5 8.5M14.5 1.5L1.5 6L7.5 8.5"
-              stroke="currentColor"
-              strokeWidth="1.3"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Send to {clientName || "client"}
-        </button>
-
-        <button
           onClick={handleDownload}
           disabled={downloading}
-          className="text-ink flex cursor-pointer items-center gap-2 text-[15px] font-medium transition-opacity hover:opacity-70 disabled:cursor-wait disabled:opacity-50"
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#1c1c1c] py-3.5 text-[15px] font-medium text-white shadow-[0_2px_8px_rgba(0,0,0,0.25)] transition-colors hover:bg-black disabled:cursor-wait disabled:opacity-50"
         >
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
             <path
