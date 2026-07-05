@@ -3,28 +3,16 @@
 export default function Header() {
   return (
     <header className="flex items-start gap-3">
-      {/* logo mark — dark rounded square with a chain link */}
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect
-            x="1.5"
-            y="5.5"
-            width="6"
-            height="5"
-            rx="2.5"
-            stroke="white"
-            strokeWidth="1.4"
-          />
-          <rect
-            x="8.5"
-            y="5.5"
-            width="6"
-            height="5"
-            rx="2.5"
-            stroke="white"
-            strokeWidth="1.4"
-          />
-        </svg>
+      {/* logo mark */}
+      <div className="h-8 w-8 shrink-0 overflow-hidden rounded-lg">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo.svg"
+          alt=""
+          width={32}
+          height={32}
+          className="h-8 w-8"
+        />
       </div>
 
       <div className="leading-tight">
